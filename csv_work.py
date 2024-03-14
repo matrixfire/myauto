@@ -69,30 +69,11 @@ existing_csv_file_ = r'C:\Users\34950\Desktop\full_time_work\products_list.csv'
 # desired_fieldnames = ['货号', '品名', '尺寸', '单价']
 
 data_read = read_from_csv_customize(existing_csv_file_)
-# print(data_read)
 
-
-
-# # Example usage:
-# existing_csv_file = 'exampleWithHeader.csv'
-# data_to_append = [
-#     {'Fruit': 'Value1', 'Quantity': 'Value2'},
-#     {'Fruit': 'ValueA', 'Quantity': 'ValueB'},
-
-#     # Add more dictionaries as needed
-# ]
-# new_csv_file = 'exampleWithHeader_n.csv'
 
 existing_csv_file = r'C:\Users\34950\Desktop\full_time_work\product_template.csv'
 data_to_append = data_read
 
-
-# how to prepare data_to_append
-# Handle
-# Title
-# Body (HTML)
-# Variant SKU
-# Variant Price
 
 new_csv_file = 'new_data.csv'
 
@@ -152,12 +133,20 @@ def gc(): # get_data_from_clipboard
 
 data_dict = dict(zip(a, b))
 
-import os, re
+
+
+
+
+
 
 from pathlib import Path
 import os
 import re
 import json
+
+
+path = Path(r'C:\Users\34950\Desktop\full_time_work\myauto') / 'data.json'
+my_dict = json.loads(path.read_text())
 
 def rename_images_in_folders(path, mapping_dict):
     for folder_name in os.listdir(path):
@@ -186,8 +175,5 @@ def rename_images_in_folders(path, mapping_dict):
                                 except:
                                     print(f'Error for {file_path}')
 
-# Example usage
-path_to_folders = "/path/to/your/folders"
-your_mapping_dict = {"2112": "value1", "1234": "value2"}  # Replace with your actual dictionary
 
-rename_images_in_folders(path_to_folders, your_mapping_dict)
+rename_images_in_folders(r'C:\Users\34950\Desktop\full_time_work\temp\imgs7', my_dict)
