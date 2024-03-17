@@ -263,3 +263,7 @@ if __name__ == "__main__":
 # - `os.rmdir(path)`: Deletes an empty folder.
 # - `shutil.rmtree(path)`: Deletes a folder and all its contents.
 # - `send2trash`: Sends files and folders to the computer's trash/recycle bin, offering a safer deletion option.
+# Absolute vs. Relative Paths:  The .\ at the start of a relative path is optional. For example, .\spam.txt and spam.txt refer to the same file; dot this directory, dot-dot the parent folder.
+# os.makedirs()； Path(r'C:\Users\Al\spam').mkdir() Note that mkdir() can only make one directory at a time; it won’t make several subdirectories at once like os.makedirs().
+    
+    
