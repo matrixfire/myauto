@@ -148,7 +148,21 @@ import json
 path = Path(r'C:\Users\34950\Desktop\full_time_work\myauto') / 'data.json'
 my_dict = json.loads(path.read_text())
 
+def sanitize_file_name(file_name):
+    invalid_chars = '\\/:*?"<>|'
+    found = False
+    new_file_name = file_name
+    for char in invalid_chars:
+        if char in file_name:
+            new_file_name = new_file_name.replace(char, ' ')
+            found = True
+    if found:
+        print(f"Sanitize name {file_name}->{new_file_name}")
+    return new_file_name
+
+
 def rename_images_in_folders(path, mapping_dict):
+    import random
     for folder_name in os.listdir(path):
         folder_path = os.path.join(path, folder_name)
         if os.path.isdir(folder_path):
@@ -167,13 +181,13 @@ def rename_images_in_folders(path, mapping_dict):
                             # Check if the file is an image (jpg or png)
                             if filename.lower().endswith(('.jpg', '.png')):
                                 # Create the new filename by appending the value and "-"
-                                new_filename = f"{value.strip().title()}-{filename}"
+                                new_filename =sanitize_file_name(f"{value.strip().title()}-{filename}") # -{filename} {random.randint(1000, 9999)}
                                 new_file_path = os.path.join(root, new_filename)
                                 # Rename the file
                                 try:
                                     os.rename(file_path, new_file_path)
-                                except:
-                                    print(f'Error for {file_path}')
+                                except Exception as e:
+                                    print(f'\nError for {file_path}: {e}')
 
 
-rename_images_in_folders(r'C:\Users\34950\Desktop\full_time_work\temp\imgs7', my_dict)
+rename_images_in_folders(r'C:\Users\34950\Desktop\full_time_work\temp\imgs12', my_dict)

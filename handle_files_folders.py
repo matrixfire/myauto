@@ -20,11 +20,12 @@ def process_zip_files(folder_path, include_string):
         # Correct file names if applicable
         for root, dirs, files in os.walk(folder_path, topdown=False):
             correct_names(root)
-            print(f'correct names at {root}')
+            
 
 
         # Find subfolders containing the include string
         matching_subfolders = [subfolder for subfolder in os.listdir(unzip_folder) if include_string in subfolder]
+
 
         # Create a new folder to move matching subfolders' content
         new_folder = os.path.join(folder_path, f"{os.path.splitext(zip_file)[0]}({include_string})")
@@ -125,8 +126,12 @@ def extract_all_zips(path):
             folders.append(folder_path)
             # Correct file and folder names recursively
             for root, dirs, files in os.walk(folder_path, topdown=False):
-                correct_names(root)
-                print(f'correct names at {root}')
+                try:
+                    correct_names(root)
+                except Exception as e:
+                    print('Correcting names failed: \n {e}\n')
+                else:
+                    print(f'correct names at {root}')
 
 
 
@@ -200,6 +205,41 @@ def pds(path, indent='', structure=''):
 # - Obtain individual file information using `getinfo()` method, returning a `ZipInfo` object.
 # - `ZipInfo` object provides attributes like `file_size` and `compress_size`, representing original and compressed sizes.
 # - Calculate compression ratio with `original file size / compressed file size`.
+# os.path.abspath('.'), os.listdir('.'), os.path.join(, ),  os.path.basename()
+
+
+
+def backupToZip(folder):
+    # Backup the entire contents of "folder" into a zip file.
+
+    folder = os.path.abspath(folder) # Make sure folder is absolute
+
+    # Figure out the filename this code should used based on what
+    # files already exist.
+    number = 1
+    while True:
+        zipFilename = os.path.basename(folder) + '_' + str(number) + '.zip'
+        if not os.path.exists(zipFilename):
+            break
+        number = number + 1
+
+    # Create the zip file.
+    print('Creating %s...' % (zipFilename))
+    backupZip = zipfile.ZipFile(zipFilename, 'w')
+
+    # Walk the entire folder tree and compress the files in each folder.
+    for foldername, subfolders, filenames in os.walk(folder):
+        print('Adding files in %s...' % (foldername))
+        # Add the current folder to the zip file.
+        backupZip.write(foldername)
+
+        # Add all the files in this folder to the zip file.
+        for filename in filenames:
+            if filename.startswith(os.path.basename(folder) + '_') and filename.endswith('.zip'):
+                continue # Don't backup the backup zip files.
+            backupZip.write(os.path.join(foldername, filename))
+    backupZip.close()
+    print('Done.')
 
 
 
@@ -208,10 +248,11 @@ if __name__ == "__main__":
     # Specify the folder path and include string
     # folder_path = input("Enter the folder path: ")
     # include_string = input("Enter the include string: ")
-    folder_path = r'C:\Users\34950\Desktop\full_time_work\temp\imgs7'
+    folder_path = r'C:\Users\34950\Desktop\full_time_work\temp\imgs12'
     include_string = '高清' # 高清
     # Call the function
-    process_zip_files(folder_path, include_string)
+    # process_zip_files(folder_path, include_string)
+    # backupToZip(r'C:\Users\34950\Desktop\full_time_work\myauto\33028详情页')
 
 
 
