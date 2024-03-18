@@ -2,17 +2,23 @@ import pyperclip as p
 import re
 
 
-# txt = p.paste()
-# # Use the Unicode character range for Chinese characters
-# re_obj = re.compile(r'^([\u4e00-\u9fff]+系列)', re.MULTILINE) 
-# data_lt = re_obj.findall(txt)
+def ec():
+    import pyperclip as p
+    import re
+    txt = p.paste()
+    # Use the Unicode character range for Chinese characters
+    re_obj = re.compile(r'\s*([\u4e00-\u9fff]+系列)', re.MULTILINE) 
+    data_lt = re_obj.findall(txt)
 
-# total_words= ''
-# print(data_lt, type(data_lt))
-# for words in data_lt:
-# 	total_words += (words+'\n')
+    total_words= ''
+    print(data_lt, type(data_lt))
+    for words in data_lt:
+        total_words += (words+'\n')
 
-# p.copy(total_words)
+    p.copy(total_words)
+    print(total_words)
+
+
 from PyPDF2 import PdfReader, PdfWriter
 
 def resize_pdf(input_pdf_path, output_pdf_path, scale_factor=0.5):

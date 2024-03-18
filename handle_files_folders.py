@@ -24,8 +24,10 @@ def process_zip_files(folder_path, include_string):
 
         # Unzip the contents
         with zipfile.ZipFile(os.path.join(folder_path, zip_file), 'r') as zip_ref:
-            zip_ref.extractall(unzip_folder)
-
+            try:
+                zip_ref.extractall(unzip_folder)
+            except Exception as e:
+                print(f'\n{zip_file} unzipping...error: \n{e}\n')
         # Correct file names if applicable
         for root, dirs, files in os.walk(folder_path, topdown=False):
             correct_names(root)
@@ -289,10 +291,10 @@ if __name__ == "__main__":
     # Specify the folder path and include string
     # folder_path = input("Enter the folder path: ")
     # include_string = input("Enter the include string: ")
-    folder_path = r'C:\Users\34950\Desktop\full_time_work\temp\imgs12'
+    folder_path = r'C:\Users\34950\Desktop\full_time_work\temp\ttttt'
     include_string = '高清' # 高清
     # Call the function
-    # process_zip_files(folder_path, include_string)
+    process_zip_files(folder_path, include_string)
     # backupToZip(r'C:\Users\34950\Desktop\full_time_work\myauto\33028详情页')
 
 
@@ -306,5 +308,45 @@ if __name__ == "__main__":
 # - `send2trash`: Sends files and folders to the computer's trash/recycle bin, offering a safer deletion option.
 # Absolute vs. Relative Paths:  The .\ at the start of a relative path is optional. For example, .\spam.txt and spam.txt refer to the same file; dot this directory, dot-dot the parent folder.
 # os.makedirs()； Path(r'C:\Users\Al\spam').mkdir() Note that mkdir() can only make one directory at a time; it won’t make several subdirectories at once like os.makedirs().
+# os.path.abspath(); os.path.isabs(); os.path.relpath(, )
+# os.path.split() is the same as (os.path.dirname(), os.path.basename())
+# os.path.getsize(); os.listdir()
+# list(some_path_obj.glob('*.?x?'); both os.listdir(p) or p.glob('*') does the same.
+# p.exists(); p.is_file(); p.is_dir()
     
-    
+
+'''
+
+import shelve
+
+# Saving variables to a binary shelf file
+def save_data():
+    data = {'name': 'John', 'age': 30, 'city': 'New York'}
+    with shelve.open('data.shelf') as shelf_file:
+        shelf_file['data'] = data
+
+# Restoring data from the binary shelf file
+def load_data():
+    with shelve.open('data.shelf') as shelf_file:
+        data = shelf_file.get('data', {})
+        print("Loaded data:", data)
+
+        
+def save_data():
+    data = {'name': 'John', 'age': 30, 'city': 'New York'}
+    with open('data.py', 'w') as file:
+        file.write("variable = " + pprint.pformat(data))
+
+def load_data():
+    import data
+    print("Loaded data:", data.variable)
+        
+# Save data to shelf file
+save_data()
+
+# Load data from shelf file
+load_data()
+
+
+
+'''
