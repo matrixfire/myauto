@@ -159,8 +159,56 @@ def resize_and_add_logo(input_dir='.', output_dir='withLogo', square_fit_size=30
 # Example usage
 # resize_and_add_logo(input_dir='.', output_dir='withLogo', square_fit_size=300, logo_filename='catlogo.png')
 
+from PIL import Image
+import os
 
 
+def get_size(size, required_dimension):
+    a, b = size
+    if max(a, b) > required_dimension:
+        return size
+    else:
+        if a >b:
+            return (required_dimension, required_dimension*b//a)
+        else:
+            return (required_dimension*a//b, required_dimension)
+    
+
+def resize_images(input_folder, output_folder, size=(200, 200)):
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
+    # Iterate over all files in the input folder
+    for file_name in os.listdir(input_folder):
+        # Get the full path of the file
+        file_path = os.path.join(input_folder, file_name)
+        # Check if the file is an image (you can extend this check if needed)
+        if os.path.isfile(file_path) and file_name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
+            # Open the image using PIL
+            try:
+                with Image.open(file_path) as img:
+
+                    size = get_size(img.size, 3000)
+                    # Resize the image
+                    img_resized = img.resize(size)
+                    
+                    # Get the file name (without extension) and extension
+                    file_name_no_ext, file_ext = os.path.splitext(file_name)
+                    
+                    # Construct the output file path
+                    output_file_path = os.path.join(output_folder, f"{file_name_no_ext}_resized{file_ext}")
+
+                    # Save the resized image to the output folder
+                    img_resized.save(output_file_path)
+                    print(f"Resized image saved: {output_file_path}")
+            except Exception as e:
+                print(f"Error processing {file_path}: {e}")
+        else:
+            print(f"Skipping {file_path}. Not an image file.")
+
+
+a_d = r'C:\Users\34950\Desktop\test3\1'
+b_d = r'C:\Users\34950\Desktop\test3'
+resize_images(a_d, b_d)
 '''PATTERN MATCHING WITH REGULAR EXPRESSIONS
 
 

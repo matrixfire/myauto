@@ -6,7 +6,17 @@ import json
 
 
 # 1, getting data from my own cache csv products data, and generate the data list 
-def read_from_csv_customize(input_file, fieldnames=['货号', '品名', '尺寸', '单价', '零件数量', 'Type']):
+import csv
+
+tmp = '''
+<p data-mce-fragment="1"><span data-mce-fragment="1">Item : Reobrix {model_id}</span></p>
+<p data-mce-fragment="1"><span data-mce-fragment="1">Number of Pieces : {pcs_num} <br></span></p>
+<p data-mce-fragment="1"><span data-mce-fragment="1">Dimensions(L x W x H) : {dimension} CM</span></p>
+<p data-mce-fragment="1"><span data-mce-fragment="1">Package Type: Carton (w</span>ithout original box)</p>
+<p data-mce-fragment="1"><strong data-mce-fragment="1">Note: <span style="color: #ff2a00;">The Mini Figures are <span style="text-decoration: underline;">NOT INCLUDED</span> in this Set !</span></strong></p>
+'''
+
+def read_from_csv_customize(input_file, fieldnames=['货号', '品名', '尺寸', '单价', '零件数量', '类型']):
     '''
     read from my customized csv file, namely my own cache file!
     '''
@@ -18,20 +28,18 @@ def read_from_csv_customize(input_file, fieldnames=['货号', '品名', '尺寸'
             model_id = filtered_row['货号']
             pcs_num = filtered_row['零件数量']
             dimension = filtered_row['尺寸']
-            tmp = f'''
-<p data-mce-fragment="1"><span data-mce-fragment="1">Item : Reobrix {model_id}</span></p>
-<p data-mce-fragment="1"><span data-mce-fragment="1">Number of Pieces : {pcs_num} <br></span></p>
-<p data-mce-fragment="1"><span data-mce-fragment="1">Dimensions(L x W x H) : {dimension} CM</span></p>
-<p data-mce-fragment="1"><span data-mce-fragment="1">Package Type: Carton (w</span>ithout original box)</p>
-<p data-mce-fragment="1"><strong data-mce-fragment="1">Note: <span style="color: #ff2a00;">The Mini Figures are <span style="text-decoration: underline;">NOT INCLUDED</span> in this Set !</span></strong></p>
-'''
+            product_name = filtered_row['品名']
+            price = filtered_row['单价']
+            product_type = filtered_row['类型']
+            
             new_data_dict = {}
-            new_data_dict['Handle'] = 'reobrix-' + str(filtered_row['货号']) + '-' + filtered_row['品名']
-            new_data_dict['Title'] = 'Reobrix ' +  filtered_row['品名'].title()
-            new_data_dict['Variant SKU'] = str(filtered_row['货号'])
-            new_data_dict['Variant Price'] = str(filtered_row['单价'])
-            new_data_dict['Body (HTML)'] = tmp
-            new_data_dict['Tags'] = filtered_row['Type']
+            new_data_dict['Handle'] = 'reobrix-' + model_id + '-' + product_name
+            new_data_dict['Title'] = 'Reobrix ' +  product_name.title()
+            new_data_dict['Variant SKU'] = model_id
+            new_data_dict['Variant Price'] = price
+            new_data_dict['Body (HTML)'] = tmp.format(model_id=model_id, pcs_num=pcs_num, dimension=dimension)
+            new_data_dict['Tags'] = product_type
+            
             result_data.append(new_data_dict)
     return result_data
 
@@ -48,10 +56,13 @@ def modify_csv(input_file, data_list, output_file=''):
         for data_dict in data_list: # data_list is a list of dictionaries
             # Ensure the keys in data_dict match the header
             row = {key: data_dict.get(key, '') for key in header}
+            row["Status"] = "active"
+            row["Variant Inventory Policy"] = "deny"
+            row["Variant Fulfillment Service"] = "manual"
             rows_to_write.append(row)
         print(rows_to_write)
     if not output_file:
-        dir, old_fn = os.path.split()
+        dir, old_fn = os.path.split(input_file)
         output_file = os.path.join(dir,"data_populated_"+old_fn)
     # Write to a new CSV file
     with open(output_file, 'a', newline='', encoding='utf-8') as outfile:
@@ -67,17 +78,15 @@ def modify_csv(input_file, data_list, output_file=''):
 
 
 
-existing_csv_file_ = r'C:\Users\34950\Desktop\full_time_work\products_list.csv' # this is my customized template
+cus_csv = r'C:\Users\34950\Desktop\full_time_work\products_list3.csv' # this is my customized template
 
-data_to_append = read_from_csv_customize(existing_csv_file_)
+data_to_append = read_from_csv_customize(cus_csv)
 
 
 existing_csv_file = r'C:\Users\34950\Desktop\full_time_work\product_template.csv' # this is offical template, but only to get the format
 
 
-new_csv_file = 'new_data.csv'
-
-modify_csv(existing_csv_file, data_to_append, new_csv_file)
+modify_csv(existing_csv_file, data_to_append)
 
 
 
@@ -129,4 +138,4 @@ def rename_images_in_folders(path, mapping_dict):
                                     print(f'\nError for {file_path}: {e}')
 
 
-# rename_images_in_folders(r'C:\Users\34950\Desktop\full_time_work\temp\imgs12', my_dict)
+rename_images_in_folders(r'C:\Users\34950\Desktop\full_time_work\temp\imgs13', my_dict)

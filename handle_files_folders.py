@@ -287,6 +287,47 @@ def backupToZip(folder):
 
 
 
+
+
+def organize_folders(folder_path, final_folder="organized_files"):
+    organize_folders_path = os.path.join(folder_path, final_folder)
+    os.makedirs(organize_folders_path)
+    for subfolder in os.listdir(folder_path):
+        subfolder_path = os.path.join(folder_path, subfolder)
+        if not os.path.isdir(subfolder_path):
+            continue
+        for subfolder in os.listdir(subfolder_path):
+            subfolder_path = os.path.join(subfolder_path, subfolder)
+            shutil.move(subfolder_path, organize_folders_path)
+            print(f'Moved {subfolder_path} -> {organize_folders_path}')
+            
+
+import os
+import shutil
+
+def organize_folders(folder_path, final_folder="organized_files"):
+    organize_folders_path = os.path.join(folder_path, final_folder)
+    os.makedirs(organize_folders_path, exist_ok=True)  # Create final folder if it doesn't exist
+
+    # Move files directly within folder_path to final_folder
+    for item in os.listdir(folder_path):
+        item_path = os.path.join(folder_path, item)
+        if os.path.isfile(item_path):
+            shutil.move(item_path, organize_folders_path)
+            print(f'Moved {item_path} -> {organize_folders_path}')
+
+    # Move files within subfolders to final_folder
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            shutil.move(file_path, organize_folders_path)
+            print(f'Moved {file_path} -> {organize_folders_path}')
+
+# Example usage:
+organize_folders('/path/to/your/folder')
+
+
+
 if __name__ == "__main__":
     # Specify the folder path and include string
     # folder_path = input("Enter the folder path: ")
@@ -314,6 +355,81 @@ if __name__ == "__main__":
 # list(some_path_obj.glob('*.?x?'); both os.listdir(p) or p.glob('*') does the same.
 # p.exists(); p.is_file(); p.is_dir()
     
+
+def walk(path):
+    import os
+    for folderName, subfolders, filenames in os.walk(path):
+        print('The current folder is ' + folderName)
+        for subfolder in subfolders:
+            print('SUBFOLDER OF ' + folderName + ': ' + subfolder)
+        for filename in filenames:
+            print('FILE INSIDE ' + folderName + ': '+ filename)
+        print("\n"*3)
+
+
+
+import os
+import shutil
+import random
+def move_contents_to_result_folder(path, result_folder):
+    # Walk through the directory tree rooted at 'path'
+    for root, dirs, files in os.walk(path):
+        # Get the relative path from the source folder, skipping the first level
+        relative_path = os.path.relpath(root, path)
+        relative_path = relative_path.split(os.path.sep, 1)[-1]
+
+        # Construct the destination folder path
+        dest_folder = os.path.join(result_folder, relative_path)
+
+        # Create the destination folder if it doesn't exist
+        if not os.path.exists(dest_folder):
+            os.makedirs(dest_folder)
+
+        # Move files to the destination folder while preserving the directory structure
+        for file in files:
+            src_file = os.path.join(root, file)
+            dest_file = os.path.join(dest_folder, file)
+            try:
+                shutil.move(src_file, dest_file)
+            except Exception as e:
+                dest_file = os.path.join(dest_folder, f'({str(random.random())})' + file)
+                print(e, "renamed")
+            print(f"Move {src_file} -> {dest_file}")
+
+# Example usage:
+
+
+
+
+source_folder = r'C:\Users\34950\Desktop\test3'
+result_folder = r'C:\Users\34950\Desktop\test4'
+move_contents_to_result_folder(source_folder, result_folder)
+
+
+
+
+def copy_jpg_images(source_folder, result_folder):
+    # Create the result folder if it doesn't exist
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
+
+    # Walk through the directory tree rooted at 'source_folder'
+    for root, _, files in os.walk(source_folder):
+        for file in files:
+            if file.lower().endswith('.jpg'):
+                src_file = os.path.join(root, file)
+                dest_file = os.path.join(result_folder, file)
+
+                # If a file with the same name exists in the result folder, rename it
+                if os.path.exists(dest_file):
+                    base_name, extension = os.path.splitext(file)
+                    new_file_name = f"{base_name} (copied){extension}"
+                    dest_file = os.path.join(result_folder, new_file_name)
+
+                # Copy the file to the result folder
+                shutil.copy(src_file, dest_file)
+
+
 
 '''
 
@@ -350,3 +466,49 @@ load_data()
 
 
 '''
+
+
+import random as r
+def c(choices_list=["work", "learn"], weight_list=[30, 10]):
+    what_2_do = r.choice(choices_list)
+    index = choices_list.index(what_2_do)
+    time_2_do = r.randint(weight_list[index]//2, weight_list[index])
+    print(f'I decide to {what_2_do.title()} for {time_2_do} mins.')
+
+# c()
+    
+
+def copy_first_images(input_path, output_folder):
+    # Ensure the output folder exists
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Get all subfolders within the input path
+    subfolders = [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
+
+    for folder in subfolders:
+        # Join subfolder with relative path "主图\2000X2667"
+        subfolder_path = os.path.join(input_path, folder, "主图", "2000X2667")
+
+        # Print the joined path for verification
+        print("Joined path:", subfolder_path)
+
+        # Check if the joined path exists
+        if os.path.exists(subfolder_path):
+            # Get all files in the joined path
+            files = os.listdir(subfolder_path)
+            
+            # Filter out only image files (assuming images have extensions like .jpg, .png, etc.)
+            image_files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp'))]
+
+            # If there are image files in the folder, copy the first image to the output folder
+            if image_files:
+                # Get the path of the first image file
+                first_image_path = os.path.join(subfolder_path, image_files[0])
+
+                # Copy the first image file to the output folder
+                shutil.copy(first_image_path, output_folder)
+                print("Copied", image_files[0], "to", output_folder)
+            else:
+                print("No image files found in", subfolder_path)
+        else:
+            print("Path does not exist:", subfolder_path)
