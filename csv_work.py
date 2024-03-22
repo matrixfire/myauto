@@ -5,6 +5,88 @@ import re
 import json
 
 
+
+def bitch():
+    '''author Bill Zou'''
+    d = "divde and conquer" # 分而治之
+    e = "begin with the end in mind" # 以始为终
+    f = "framework" # 要有框架
+    b = "backward thinking" # 逆向思维
+    i = "intersections" # 寻找交集
+    t = "tools" # 使用工具
+    c = "core" # 找到问题核心
+    h = "higer vision" # 更高的视角和维度看问题
+
+    
+
+
+
+def cells_2_list(txt=''):
+    import pyperclip as p
+    # Check if the text contains double quotes
+    if not txt:
+        txt = p.paste()
+    txt = txt.strip()
+    if '"' in txt:
+        # Replace new lines within quotes with whitespace
+        cleaned_txt = ''
+        in_quote = False
+        for char in txt:
+            if char == '"':
+                in_quote = not in_quote
+            if in_quote and char == '\n':
+                cleaned_txt += ' '
+            else:
+                cleaned_txt += char
+        # Remove double quotes
+        cleaned_txt = cleaned_txt.replace('"', '')
+    else:
+        cleaned_txt = txt.strip()  # Remove leading/trailing whitespace
+    # Split text into a list based on newline separator
+    result_list = cleaned_txt.split('\n')
+    result_list = [i.strip() for i in result_list]
+    print(f'Found {len(result_list)} item(s).')
+    return result_list
+
+
+def extract_numbers_2_clipboard(alist):
+    import re
+    import pyperclip as p
+    num_obj = re.compile(r'.*?(\d*).*?')
+    alist_nums = [num_obj.search(i).group(0) for i in alist]
+    print(len(alist_nums), alist_nums, sep="\n")
+    p.copy('\n'.join(alist_nums).strip())
+
+
+def extract_numbers(text):
+    # Define regex pattern to match numbers with or without decimals
+    pattern = r'\b\d+(?:\.\d+)?\b'
+    # Use findall to extract all matching numbers from the text
+    numbers = re.findall(pattern, text)
+    return numbers
+
+def get_largest_num(numbers):
+    if not numbers:
+        return 0
+    else:
+        nums = [float(i) for i in numbers]
+        return max(nums)
+
+
+def temp_price(num_str):
+    e = 7.1
+    num = float(num_str)
+    if num <= 25.8:
+        return 25.8*5/e
+    elif num < 100:
+        return num*5/e
+    elif 100 <= num <= 300:
+        return num*4.5/e
+    elif 300 < num <= 600:
+        return num*4/e
+    else:
+        return num*3.5/e
+
 # 1, getting data from my own cache csv products data, and generate the data list 
 import csv
 
