@@ -1,1 +1,1 @@
-@pyw.exe C:\Users\34950\Desktop\full_time_work\myauto\mcb.pyw %*
+@pyw.exe C:\Users\Administrator\Desktop\work2024\myauto\mcb.pyw %*
