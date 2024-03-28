@@ -1,6 +1,6 @@
 '''
 1, Always call raise_for_status() after calling requests.get(). You want to be sure that the download has actually worked before your program continues.
-2, 
+2, Beautiful Soup’s select() or Selenium’s find_element_by_css_selector() methods
 
 '''
 
