@@ -22,6 +22,7 @@ def bitch():
 
 
 def cells_2_list(txt=''):
+    '''still have bugs...'''
     import pyperclip as p
     # Check if the text contains double quotes
     if not txt:
@@ -39,7 +40,7 @@ def cells_2_list(txt=''):
             else:
                 cleaned_txt += char
         # Remove double quotes
-        cleaned_txt = cleaned_txt.replace('"', '')
+        # cleaned_txt = cleaned_txt.replace('"', '')
     else:
         cleaned_txt = txt.strip()  # Remove leading/trailing whitespace
     # Split text into a list based on newline separator
@@ -73,6 +74,9 @@ def get_largest_num(numbers):
         return max(nums)
 
 
+
+
+
 def temp_price(num_str):
     e = 7.1
     num = float(num_str)
@@ -94,8 +98,7 @@ tmp = '''
 <p data-mce-fragment="1"><span data-mce-fragment="1">Item : Reobrix {model_id}</span></p>
 <p data-mce-fragment="1"><span data-mce-fragment="1">Number of Pieces : {pcs_num} <br></span></p>
 <p data-mce-fragment="1"><span data-mce-fragment="1">Dimensions(L x W x H) : {dimension} CM</span></p>
-<p data-mce-fragment="1"><span data-mce-fragment="1">Package Type: Carton (w</span>ithout original box)</p>
-<p data-mce-fragment="1"><strong data-mce-fragment="1">Note: <span style="color: #ff2a00;">The Mini Figures are <span style="text-decoration: underline;">NOT INCLUDED</span> in this Set !</span></strong></p>
+<p data-mce-fragment="1"><span data-mce-fragment="1">Package Type: Original packaging included (color box)</p>
 '''
 
 def read_from_csv_customize(input_file, fieldnames=['货号', '品名', '尺寸', '单价', '零件数量', '类型']):
