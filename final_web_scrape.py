@@ -4,6 +4,7 @@
 3, 
 Multiple Element Selector (a, b): Selects all <a> and <b> elements.
 
+
 Descendant Selector (a b): Selects all <b> elements that are descendants of <a> elements.
 
 Child Selector (a > b): Selects all <b> elements where the parent is an <a> element.

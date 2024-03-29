@@ -82,3 +82,18 @@ An H1 header is the main heading at the top of a page. When you create a product
    - 使用 Google Search Console 或其他 SEO 工具监测流量、点击率、排名等数据。
    - 针对排名靠前的关键词，自然地将其加入相关文章中，提高排名。
    - 优化点击率较低的关键词，改进标题以提高吸引力。
+
+
+
+
+
+
+
+
+
+
+let languages = [];
+languages.push("Python");
+languages.unshift("Erlang");
+languages.pop();
+let worstLanguage = languages.shift();
