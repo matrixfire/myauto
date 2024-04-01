@@ -73,19 +73,6 @@ def rename_empty_folders(path):
             shutil.move(foldername, new_name)
             print(f"Renamed '{foldername}' to '{new_name}'")
 
-
-import os
-import zipfile
-
-def extract_all_zips(path):
-    for filename in os.listdir(path)[:1]:
-        if filename.endswith('.zip'):
-            zip_file_path = os.path.join(path, filename)
-            with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-                zip_ref.extractall(path)
-            print(f"Extracted: {zip_file_path}")
-
-
 import os
 import zipfile
 import shutil
@@ -147,26 +134,6 @@ def extract_all_zips(path):
 
 
 
-def correct_names_(directory):
-    """
-    Recursively corrects both file and folder names within the specified directory.
-
-    Parameters:
-        directory (str): The path to the directory to correct names in.
-    """
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            os.rename(
-                os.path.join(root, file),
-                os.path.join(root, file.encode('cp437').decode('gbk'))
-            )
-        for folder in dirs:
-            os.rename(
-                os.path.join(root, folder),
-                os.path.join(root, folder.encode('cp437').decode('gbk'))
-            )
-
-
 
 def correct_names(directory):
     """
@@ -178,10 +145,17 @@ def correct_names(directory):
     for root, dirs, files in os.walk(directory):
         for file in files:
             print(root, file, sep='\nxxxxx\n')
-            os.rename(*fix_characts(root, file))
+            try:
+                os.rename(*fix_characts(root, file))
+            except Exception as e:
+                print(f'{e}')
+                
         for folder in dirs:
             print(root,folder, sep='\nxxxxx\n')
-            os.rename(*fix_characts(root, folder))
+            try:
+                os.rename(*fix_characts(root, folder))
+            except Exception as e:
+                print(f'{e}')
 
 
 def fix_characts(root, file_name):

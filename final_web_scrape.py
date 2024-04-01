@@ -25,6 +25,17 @@ Sure, here's a summary:
 
 - `soup.select('input[type="button"]')`: This one is used to find and select all `<input>` elements that specifically have a `type` attribute set to the value `"button"`.
 
+
+
+
+
+5,
+Your computer is like a big house.
+A hypervisor is like a magical house manager who divides the house into separate apartments (virtual machines) for different families (operating systems) to live in independently.
+Virtualization is the process of creating these separate, virtual apartments inside the big house.
+The client refers to the end users or software that uses or manages these virtual apartments.
+
+
 '''
 
 
