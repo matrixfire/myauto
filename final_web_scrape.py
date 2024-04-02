@@ -83,3 +83,55 @@ def parse_html_and_select(selector, file_path):
     }
     
     return summary
+
+
+
+import requests
+import os
+import bs4
+import random
+import time
+
+def save_image(image_url, directory='xkcd'):
+    """Downloads and saves an image from a given URL to a specified directory."""
+    print(f'Downloading image {image_url}...')
+    response = requests.get(image_url)
+    response.raise_for_status()
+    # Save the image to the specified directory
+    with open(os.path.join(directory, os.path.basename(image_url)), 'wb') as image_file:
+        for chunk in response.iter_content(100_000):
+            image_file.write(chunk)
+
+def download_xkcd_comics():
+    """Downloads all XKCD comics and saves them in a local directory."""
+    url = 'https://xkcd.com'
+    os.makedirs('xkcd', exist_ok=True)
+
+    while not url.endswith('#'):
+        print(f'Downloading page {url}...')
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = bs4.BeautifulSoup(response.text, 'html.parser')
+
+        comic_element = soup.select('#comic img')
+        if not comic_element:
+            print('Could not find comic image.')
+        else:
+            comic_url = 'https:' + comic_element[0].get('src')
+            save_image(comic_url)  # Call the save_image function
+
+        prev_link = soup.select('a[rel="prev"]')[0]
+        url = 'https://xkcd.com' + prev_link.get('href')
+
+        time.sleep(random.randint(1, 3))
+        if random.randint(1, 30) == 5:
+            print('Lucky stop.')
+            break
+
+    print('Done.')
+
+# Example usage:
+# download_xkcd_comics()
+
+# Example usage:
+# download_xkcd_comics()
