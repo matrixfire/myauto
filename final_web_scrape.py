@@ -135,3 +135,43 @@ def download_xkcd_comics():
 
 # Example usage:
 # download_xkcd_comics()
+
+
+'''
+https://blog.csdn.net/qq_43125235/article/details/125601564
+
+
+import time
+# 导入selenium包
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+# 启动并打开指定页面
+browser = webdriver.Firefox()
+browser.get("http://www.baidu.com/")
+# 通过name属性选择文本框元素，并设置内容
+browser.find_element(By.NAME,'wd').send_keys("selenium")
+# 通过通过ID属性获取“百度一下”按钮，并执行点击操作
+browser.find_element(By.ID,"su").click()
+# 停留五秒后关闭浏览器
+time.sleep(5)
+browser.quit()
+
+
+
+
+
+
+find_element()系列：用于定位单个的页面元素。
+find_elements()系列：用于定位一组页面元素，获取到的是一组列表。
+
+By.ID
+By.NAME
+By.CLASS_NAME
+By.TAG_NAME
+By.LINK_TEXT
+By.PARTIAL_LINK_TEXT
+
+
+
+
+'''
