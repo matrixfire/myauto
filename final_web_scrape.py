@@ -158,6 +158,9 @@ browser.quit()
 
 
 
+browser.find_element(By.XPATH, '//*[@id="toolbar-search-input"]').send_keys('selenium')
+
+
 
 
 
@@ -170,7 +173,7 @@ By.CLASS_NAME
 By.TAG_NAME
 By.LINK_TEXT
 By.PARTIAL_LINK_TEXT
-
+By.XPATH
 
 
 
