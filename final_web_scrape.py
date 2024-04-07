@@ -162,7 +162,7 @@ browser.find_element(By.XPATH, '//*[@id="toolbar-search-input"]').send_keys('sel
 
 
 
-
+/*[@id="toolbar-search-input" and @yy='bb']/p
 
 find_element()系列：用于定位单个的页面元素。
 find_elements()系列：用于定位一组页面元素，获取到的是一组列表。
@@ -174,7 +174,7 @@ By.TAG_NAME
 By.LINK_TEXT
 By.PARTIAL_LINK_TEXT
 By.XPATH
-
+By.CSS_SELECTOR
 
 
 '''
