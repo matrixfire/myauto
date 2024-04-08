@@ -156,10 +156,28 @@ browser.find_element(By.ID,"su").click()
 time.sleep(5)
 browser.quit()
 
+.send_keys('XXX')
+.clear()
+.submit()
+.click()
+
+title页面标题
+page_source 页面源码
+current_url页面连接
+text标签内文本
 
 
 browser.find_element(By.XPATH, '//*[@id="toolbar-search-input"]').send_keys('selenium')
 
+browser.implicitly_wait(5)
+
+maximize_window()窗口最大化。
+minimize_window()窗口最小化。
+set_window_size(width,height)调整窗口到指定尺寸。
+
+forward()前进一页。
+back()后退一页。
+refresh()页面刷新
 
 
 /*[@id="toolbar-search-input" and @yy='bb']/p
