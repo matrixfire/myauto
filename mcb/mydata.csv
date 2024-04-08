@@ -1,13 +1,15 @@
 key,value
 pip,"""-i https://pypi.tuna.tsinghua.edu.cn/simple"""
-address,"深圳龙华区锦尚商业楼四楼3A06邹先生17727962501"
+address,深圳龙华区锦尚商业楼四楼3A06邹先生17727962501
 reobrix,"Our company which in china, with brand name Reobrix, is making and selling building blocks like Lego's (but you can not use LEGO word as company or product intro too often as Lego is other brand name, which would violate laws ) below is a BRANDINTRODUCTION
 :
 REOBRIX BUILDING BLOCK MOLDS ARE SOLDIN MORE THAN 150 COUNTRIES AND REGIONSAROUND THE WORLD. THE CHANNELS COVERE-COMMERCE, SHOPPING MALLS, SUPERMAR-KETS AND SPECIALTY STORES, ETC., AND ARECURRENTLY SOLD AT MORE THAN 2000 SALESTERMINALS AROUND THE WORLD.WE FOCUSON THE CONSTRUCTION AND DEVELOPMENTOF BRAND. CULTURE, AND CREATIVITY. SINCETHE ESTABLISHMENT OF THE COMPANY. WEHAVE REGISTERED A NUMBER OF DESIGN ANDUTILITY MODEL MAJORS. WE HAVE ALSOSIGNED PRODUCT AUTHORIZATIONS WITHMANY WELL-KNOWN BRANDS, AND THEPRODUCTS WE HAVE LAUNCHED HAVE ALSOBEEN FAVORED BY MANY CUSTOMERS.RECOGNIZED AND ESTABLSHED LONG-TERMCOOPERATION."
 email,bill@reobrix.com
-t1,"mouldkingcorp.com
-afobrick.com
-sluban.nl
-reobrix.com"
-easy,Explain [insert topic] in simple and easy terms that any beginner can understand.
+t1,Ideas 
+easy,Explain {} in simple and easy terms that any beginner can understand.
 easy-ch,用任何初学者都能理解的简单易懂的术语解释[插入主题]。
+cn,"pls translate english into chinese, keep each line or sentence of english above and translation below:
+{}"
+t2,Similar 
+sum,Summarize the text below and give me a list of bullet points with key insights and the most important facts.
+analogy,Can you create an analogy for

@@ -12,8 +12,8 @@ All the rotations, resizing, cropping, drawing, and other image manipulations wi
 The origin is the pixel at the top-left corner of the image and is specified with the notation (0, 0). 
 Coordinates and Box Tuples: Many of Pillow’s functions and methods take a box tuple argument, like (3, 1, 9, 6), which is (Left, Top, Right, Bottom).
 '''
-from PIL import ImageColor
-from PIL import Image
+from PIL import Image, ImageColor, ImageDraw
+import os
 
 
 aIm = Image.open('zophie.png')
@@ -25,6 +25,10 @@ print(f"{aIm.filename}, {aIm.format}")
 
 
 
+def gis(image_path):
+    with Image.open(image_path) as img:
+        return img.size
+
 cIm = aIm.crop((335, 345, 565, 560)) # exclusive
 cIm.save('cropped.png')
 
@@ -34,14 +38,15 @@ dIm.paste(cIm, (0, 0))
 x, y = dIm.size[0]-cIm.size[0], dIm.size[1]-cIm.size[1]
 dIm.paste(cIm, (x, y))
 
+
 eIm = aIm.resize((int(width / 2), int(height / 2)))
 eIm.save('quartersized.png')
+
 
 aIm.rotate(90).save('rotated90.png')
 
 fIm = aIm.rotate(7, expand=True)
 fIm.save('rotated7_expanded.png')
-
 
 gIm.transpose(Image.FLIP_LEFT_RIGHT).save('horizontal_flip.png')
 gIm.transpose(Image.FLIP_TOP_BOTTOM).save('vertical_flip.png')
@@ -51,55 +56,152 @@ gIm.transpose(Image.FLIP_TOP_BOTTOM).save('vertical_flip.png')
 
 
 
-from PIL import Image, ImageColor
+
+def merge_and_save_images_corrected(base_image_path, second_image_path, factor=0.7):
+    """
+    Adjusts the function to resize the second image to 61.8% of the base image's height, ensuring the resized second
+    image is pasted within the right side of the base image. The center of the second image will be equidistant from
+    the upper, lower, and right side of the base image. This version also ensures the spacing on the right side of the
+    base image is the same as the spacing to the sides of the second image. The final image is saved over the base image
+    path, effectively updating the original base image.
+    """
+    from PIL import Image
+
+    # Open the base image
+    with Image.open(base_image_path) as base_img:
+        base_width, base_height = base_img.size
+        print(f"Base image size: {base_img.size}")
+
+        # Open the second image and resize it to 61.8% of the base image's height
+        with Image.open(second_image_path) as second_img:
+            resize_height = int(base_height * factor)
+            second_img_resized = second_img.resize((resize_height, resize_height))
+
+            # Calculate the position to paste the resized second image
+            # Ensure it's within the base image and equidistant from the top, bottom, and right edge
+            spacing = (base_height - resize_height) // 2
+            x_position = base_width - resize_height - spacing
+            y_position = spacing
+
+            # Paste the resized second image onto the base image at the calculated position
+            base_img.paste(second_img_resized, (x_position, y_position))
+
+            # Save the modified image back to the base image path
+            new_base_image_path = 'new_' + base_image_path
+            base_img.save(new_base_image_path)
+
+
+
+def _merge_and_save_images_corrected(base_image_path, second_image_path, factor=0.7):
+    """
+    Adjusts the function to resize the second image to 61.8% of the base image's height, ensuring the resized second
+    image is pasted within the right side of the base image. The center of the second image will be equidistant from
+    the upper, lower, and right side of the base image. This version also ensures the spacing on the right side of the
+    base image is the same as the spacing to the sides of the second image. The final image is saved over the base image
+    path, effectively updating the original base image.
+    """
+    from PIL import Image
+
+    # Open the base image
+    with Image.open(base_image_path) as base_img:
+        base_width, base_height = base_img.size
+        print(f"Base image size: {base_img.size}")
+
+        # Open the second image and resize it to 61.8% of the base image's height
+        with Image.open(second_image_path) as second_img:
+            resize_height = int(base_height * factor)
+            second_img_resized = second_img.resize((resize_height, resize_height))
+
+            # Calculate the position to paste the resized second image
+            # Ensure it's within the base image and equidistant from the top, bottom, and right edge
+            spacing = (base_height - resize_height) // 2
+            x_position = base_width - resize_height - spacing-resize_height
+            y_position = spacing
+
+            # Paste the resized second image onto the base image at the calculated position
+            base_img.paste(second_img_resized, (x_position, y_position))
+
+            # Save the modified image back to the base image path
+            new_base_image_path = 'new_' + base_image_path
+            base_img.save(new_base_image_path)
+
+# Note: To use this function, replace 'base_image_path' and 'second_image_path' with your actual image paths.
+# This code will not run here due to the absence of actual file paths and images.
+# Example usage:
+# base_image_path = "/path/to/your/base/image.jpg"
+# second_image_path = "/path/to/your/second/image.jpg"
+# merge_and_save_images_corrected(base_image_path, second_image_path)
+# The modified base image will be saved over the original file.
+
+# Example usage
+# base_image_path = "/path/to/base/image.jpg"
+# second_image_path = "/path/to/second/image.jpg"
+# modified_image = merge_images_within_base(base_image_path, second_image_path)
+# modified_image.show() # This will display the base image with the second image merged within its right side.
+
+
+# Example usage
+# base_image_path = "/path/to/base/image.jpg"
+# second_image_path = "/path/to/second/image.jpg"
+# new_image = merge_images(base_image_path, second_image_path)
+# new_image.show() # This will display the new image with the modifications.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def change_individual_pixels():
     # Create a new RGBA image with dimensions 100x100
     im = Image.new('RGBA', (100, 100))
     # bIm = Image.new('RGBA', (100, 200), 'purple') # ('purple' can be omitted which means Invisible black, (0, 0, 0, 0), is the default color used if no color argument is specified
-
     # Set the pixels in the top half of the image to (210, 210, 210, 255)
     for x in range(100):
         for y in range(50):
             im.putpixel((x, y), (210, 210, 210, 255))
-
     # Set the pixels in the bottom half of the image to 'darkgray'
     for x in range(100):
         for y in range(50, 100):
             im.putpixel((x, y), ImageColor.getcolor('darkgray', 'RGBA'))
             # get RGBA values from color name
             # ImageColor.getcolor('red', 'RGBA') # case-insensitive
-
     # Print the pixel values at specific coordinates
     print(im.getpixel((0, 0)))    # (210, 210, 210, 255)
     print(im.getpixel((0, 50)))   # (169, 169, 169, 255)
-
     # Save the image
     im.save('putPixel.png')
 
 
 
 
-from PIL import Image
 # tile Zophie’s head across the entire image
 def tile_object_across_background(background_path, object_path, output_path):
     # Open the images
     background = Image.open(background_path)
     obj = Image.open(object_path)
-
     # Get image dimensions
     background_width, background_height = background.size
     obj_width, obj_height = obj.size
-
     # Create a copy of the background image
     result_image = background.copy()
-
     # Iterate over positions and paste the object image
     for left in range(0, background_width, obj_width):
         for top in range(0, background_height, obj_height):
             result_image.paste(obj, (left, top))
-
     # Save the result
     result_image.save(output_path)
 
@@ -108,31 +210,24 @@ def tile_object_across_background(background_path, object_path, output_path):
 
 
 
-#!/usr/bin/env python3
-from PIL import Image
-import os
 
 def resize_and_add_logo(input_dir='.', output_dir='withLogo', square_fit_size=300, logo_filename='catlogo.png'):
     # Load the logo image
     logo_im = Image.open(logo_filename)
     logo_width, logo_height = logo_im.size
     print(f"Logo dimensions: {logo_width} x {logo_height}")
-
     # Create a directory to store images with logos
     os.makedirs(output_dir, exist_ok=True)
-
     # Loop over all files in the input directory
     for filename in os.listdir(input_dir):
         # Skip non-image files and the logo file itself
         if not (filename.endswith('.png') or filename.endswith('.jpg')) or filename == logo_filename:
             continue
-
         # Open the image
         im = Image.open(os.path.join(input_dir, filename))
         width, height = im.size
         print(f"Original image dimensions: {width} x {height}")
         ori_width, ori_height = width, height
-
         # Check if the image needs to be resized
         if width > square_fit_size or height > square_fit_size:
             # Calculate the new width and height to resize to
@@ -142,25 +237,21 @@ def resize_and_add_logo(input_dir='.', output_dir='withLogo', square_fit_size=30
             else:
                 width = int((square_fit_size / height) * width)
                 height = square_fit_size
-
             # Resize the image
             print(f'Resizing {filename}... from original ({ori_width}, {ori_height}) to ({width}, {height}).')
             im = im.resize((width, height))
-
         # Add the logo to the lower-right corner
         print(f'Adding logo to {filename}...')
         logo_im_resized = logo_im.resize((int(min(width, height) * 1/10), int(min(width, height) * 1/10 * logo_height/logo_width)))
         logo_resized_width, logo_resized_height = logo_im_resized.size
         im.paste(logo_im_resized, (width - logo_resized_width, height - logo_resized_height), logo_im_resized)
-
         # Save changes
         im.save(os.path.join(output_dir, filename))
 
 # Example usage
 # resize_and_add_logo(input_dir='.', output_dir='withLogo', square_fit_size=300, logo_filename='catlogo.png')
 
-from PIL import Image
-import os
+
 
 
 def get_size(size, required_dimension):
@@ -231,7 +322,6 @@ Copy or move images into different folders based on their sizes.
 Add a mostly transparent watermark to an image to prevent others from copying it.'''
 
 
-from PIL import Image, ImageDraw
 
 # Create a new RGBA image with a white background
 im = Image.new('RGBA', (200, 200), 'white')
@@ -411,93 +501,6 @@ When called on a regex that has groups, such as (\d\d\d)-(\d\d\d)-(\d\d\d\d), th
 
 
 '''
-都可缓存，可累加
-
-学习自动化20分钟 
-做自己网站-15分钟
-PS-10分钟
-了解工作10分钟
-看书5分钟
-学习视频剪辑10分钟
-学习自动化20分钟 
-做自己网站-15分钟
-PS-10分钟
-游戏45分钟
-出去走30分钟
-学习视频剪辑10分钟
-学习自动化20分钟 
-做自己网站-15分钟
-PS-10分钟
-了解工作10分钟
-看书5分钟
-学习视频剪辑10分钟
-学习自动化20分钟 
-做自己网站-15分钟
-PS-10分钟
-游戏30分钟
-看书5分钟
-学习视频剪辑10分钟
-学习自动化20分钟 
-做自己网站-15分钟
-PS-10分钟
-了解工作10分钟
-看书5分钟
-游戏1小时
-Plank 1min
-Plank 1min
-Push-up 20
-Push-up10
-Plank 30sec
-Plank 30sec
-
-
-
-D11-游戏45分钟
-D12-了解工作10分钟
-D13-Push-up 20
-D14-做自己网站-15分钟
-D15-看书5分钟
-D16-PS-10分钟
-D21-做自己网站-15分钟
-D22-学习自动化20分钟 
-D23-PS-10分钟
-D24-看书5分钟
-D25-Plank 1min
-D26-学习视频剪辑10分钟
-D31-Plank 30sec
-D32-PS-10分钟
-D33-PS-10分钟
-D34-休息40分钟
-D35-学习自动化20分钟 
-D36-游戏1小时
-D41-了解工作20分钟
-D42-学习视频剪辑10分钟
-D43-游戏30分钟
-D44-学习视频剪辑10分钟
-D45-做自己网站-15分钟
-D46-了解工作30分钟
-D51-做自己网站-15分钟
-D52-学习自动化20分钟 
-D53-学习自动化20分钟 
-D54-做自己网站-15分钟
-D55-学习自动化20分钟 
-D56-看书5分钟
-D61-Plank 1min
-D62-学习视频剪辑10分钟
-D63-PS-10分钟
-D64-Push-up10
-D65-Plank 30sec
-D66-出去走30分钟
-
-
-
-
-
-
-
-
-
-
 
 
 

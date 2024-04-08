@@ -64,7 +64,12 @@ if arg_len >= 2:
         print("All data cleared from the shelve.")
     else:
         if action in my_shelf:
-            pyperclip.copy(my_shelf[action].strip().strip("\""))
+            content = my_shelf[action]
+            # Check if content has curly braces and replace the content within them
+            if '{' in content and '}' in content:
+                content_to_paste = pyperclip.paste()
+                content = content.replace(content[content.find('{'):content.find('}')+1], content_to_paste)
+            pyperclip.copy(content.strip().strip("\""))
 
 # Always close the shelve file
 my_shelf.close()

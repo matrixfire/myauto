@@ -12,6 +12,53 @@ from openpyxl.styles import Font
 
 from ordered_set import OrderedSet
 
+
+
+
+
+
+import re
+import pyperclip
+from ordered_set import OrderedSet
+
+
+emailRegex = re.compile(r'''(
+    [a-zA-Z0-9._%+-]+   # username
+    @ 
+    [a-zA-Z0-9.-]+  # domain name
+    (\.[a-zA-Z]{2,4}) 
+    )''', re.VERBOSE)
+
+
+def find_emails(txt=''):
+    if not txt:
+        txt = pyperclip.paste()
+    # lt = [i[0] for i in emailRegex.findall(txt)]
+    no_dup = OrderedSet()
+    for i in emailRegex.findall(txt):
+        emailAdd = i[0].lower()
+        if emailAdd not in no_dup:
+            print(emailAdd)
+            no_dup.add(emailAdd)
+    result_list = list(no_dup)
+    print(f'\n{len(result_list)} emails copied to clipboard.\n')
+    pyperclip.copy('\n'.join(result_list))
+    # print(f'\nTotal: {len(no_dup)}')
+    return result_list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def about_match_object_group():
     ''' 
     practices for search method of Regex objects
@@ -81,23 +128,7 @@ def about_sub_method():
     print(new_text)
     print(new_text.format(**d))
 
-# about_sub_method()
 
-
-
-# emailRegex = re.compile(r'''(
-#     [a-zA-Z0-9._%+-]+      # username
-#     @                      # @ symbol
-#     [a-zA-Z0-9.-]+         # domain name
-#         (\.[a-zA-Z]{2,4})       # dot-something
-#     )''', re.VERBOSE)
-
-emailRegex = re.compile(r'''(
-    [a-zA-Z0-9._%+-]+   # username
-    @ 
-    [a-zA-Z0-9.-]+  # domain name
-    (\.[a-zA-Z]{2,4}) 
-    )''', re.VERBOSE)
 
 '''
 

@@ -6,25 +6,18 @@
 
 Explaining Ecommerce
 解释电子商务
-
 Introducing Shopify
 介绍Shopify
-
 Planning for Ecommerce Success
 计划电子商务成功
-
 Getting Creative: Setting Up Your Shopify Store
 发挥创意：设置您的Shopify商店
-
 Making Friends with Your Customers
 与您的客户建立友谊
-
 Taking Care of Business: Managing Stock Levels and Delivering Orders
 处理业务：管理库存水平和交付订单
-
 Growing Your Business through Marketing
 通过营销发展您的业务
-
 Going Live!
 上线！
 
@@ -33,19 +26,14 @@ Going Live!
 
 Choosing a Shopify Plan
 选择一个Shopify计划
-
 Shopify’s Support Services
 Shopify的支持服务
-
 Deciding on Your Domain Name
 决定您的域名
-
 Where Am I? Signing Up with Shopify
 我在哪里？注册Shopify
-
 Navigating the Shopify Admin Panel
 导航Shopify管理员面板
-
 Using Shopify to Sell In-store and Digital Products
 使用Shopify销售店内和数字产品
 
@@ -54,13 +42,10 @@ Using Shopify to Sell In-store and Digital Products
 
 Sourcing the Right Products to Sell
 采购正确的销售产品
-
 Introducing Online Sales Channels
 介绍在线销售渠道
-
 All about Dropshipping
 关于全面代发
-
 Selling on Online Marketplaces
 在在线市场上销售
 
@@ -72,7 +57,6 @@ Selling on Online Marketplaces
 
 Coding, Web Developers and Shopify
 编码，网页开发者和Shopify
-
 Finding Your Way: Website Architecture
 找到您的方式：网站架构
 
