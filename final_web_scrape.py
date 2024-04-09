@@ -194,5 +194,11 @@ By.PARTIAL_LINK_TEXT
 By.XPATH
 By.CSS_SELECTOR
 
+current_window_handle
+window_handles
+switch_to.window("XX")
+switch_to.frame(XX)
+switch_to.parent_frame()
+switch_to.alert
 
 '''
