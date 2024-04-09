@@ -165,7 +165,7 @@ def foxmail(n=3):
         # pyautogui.click(31, 42) #send
         pyautogui.hotkey('ctrl', 'enter')
     import pyinputplus as pyip
-    max_time = pyip.inputInt(prompt="Enter your total time default 180secs: ", min=60, max=600, blank=True)
+    max_time = pyip.inputInt(prompt="Enter your total time default 180secs: ", min=20, max=600, blank=True)
     if not max_time:
         max_time = 180
     print(f'max random time to wait is: {max_time}')  

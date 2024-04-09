@@ -66,9 +66,9 @@ if arg_len >= 2:
         if action in my_shelf:
             content = my_shelf[action]
             # Check if content has curly braces and replace the content within them
-            if '{' in content and '}' in content:
+            if '{{' in content and '}}' in content:
                 content_to_paste = pyperclip.paste()
-                content = content.replace(content[content.find('{'):content.find('}')+1], content_to_paste)
+                content = content.replace(content[content.find('{{'):content.find('}}')+len('}}')], content_to_paste)
             pyperclip.copy(content.strip().strip("\""))
 
 # Always close the shelve file
