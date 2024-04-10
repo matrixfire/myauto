@@ -10,6 +10,8 @@ ORGANIZING FILES
 import os
 import zipfile
 import shutil
+import pyperclip
+
 
 
 def process_zip_files(folder_path, include_string):
@@ -92,15 +94,6 @@ def extract_all_zips(path):
                 for file in files:
                     os.rename(os.path.join(root, file), os.path.join(root, file.encode('cp437').decode('gbk')))  
 
-# Example usage:
-# extract_all_zips('/path/to/your/directory')
-
-
-
-
-
-import os
-import zipfile
 
 def extract_all_zips(path):
     """
@@ -168,9 +161,6 @@ def fix_characts(root, file_name):
     return old_name, new_name
 
 
-
-import os
-import pyperclip
 
 def pds(path, indent='', structure=''):
     """
@@ -276,8 +266,6 @@ def organize_folders(folder_path, final_folder="organized_files"):
             print(f'Moved {subfolder_path} -> {organize_folders_path}')
             
 
-import os
-import shutil
 
 def organize_folders(folder_path, final_folder="organized_files"):
     organize_folders_path = os.path.join(folder_path, final_folder)
@@ -370,16 +358,6 @@ def move_contents_to_result_folder(path, result_folder):
                 print(e, "renamed")
             print(f"Move {src_file} -> {dest_file}")
 
-# Example usage:
-
-
-
-
-source_folder = r'C:\Users\34950\Desktop\test3'
-result_folder = r'C:\Users\34950\Desktop\test4'
-move_contents_to_result_folder(source_folder, result_folder)
-
-
 
 
 def copy_jpg_images(source_folder, result_folder):
@@ -451,38 +429,67 @@ def c(choices_list=["work", "learn"], weight_list=[30, 10]):
 
 # c()
     
+import os
+f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
+f2 = lambda input_path: [folder for folder in os.listdir(input_path)]
+g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)]
+
+
+import re
+import random
+
+def change_file_name(input_path):
+    import random
+    dirname = os.path.dirname(input_path)
+    basename = os.path.basename(input_path)
+    new_base = f'({random.randint(1000, 9999)})'+ basename
+    return os.path.join(dirname, new_base)
 
 def copy_first_images(input_path, output_folder):
+    sku_regex = re.compile(r'\d+[a-zA-Z]')
     # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
-
     # Get all subfolders within the input path
     subfolders = [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
-
     for folder in subfolders:
         # Join subfolder with relative path "主图\2000X2667"
         subfolder_path = os.path.join(input_path, folder, "主图", "2000X2667")
-
+        sku_mo = sku_regex.search(folder)
+        if sku_mo:
+            sku = sku_mo.group()
+        else:
+            sku = f"sku-unknown-{random.randint(100,999)}"
         # Print the joined path for verification
         print("Joined path:", subfolder_path)
-
         # Check if the joined path exists
         if os.path.exists(subfolder_path):
             # Get all files in the joined path
-            files = os.listdir(subfolder_path)
-            
+            files = os.listdir(subfolder_path)            
             # Filter out only image files (assuming images have extensions like .jpg, .png, etc.)
             image_files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp'))]
-
             # If there are image files in the folder, copy the first image to the output folder
             if image_files:
                 # Get the path of the first image file
                 first_image_path = os.path.join(subfolder_path, image_files[0])
-
                 # Copy the first image file to the output folder
                 shutil.copy(first_image_path, output_folder)
-                print("Copied", image_files[0], "to", output_folder)
+                print(f'copied file {first_image_path} to folder {output_folder}.')
+                moved_file_name = os.path.basename(first_image_path)
+                moved_file_path = os.path.join(output_folder, moved_file_name)
+                new_file_name = f'({sku}){moved_file_name}'
+                new_file_path = os.path.join(os.path.dirname(moved_file_path), new_file_name)
+                try:
+                    os.rename(moved_file_path, new_file_path)
+                except FileExistsError:
+                    new_file_path = change_file_name(new_file_path)
+                    print(f'auto renaming to {new_file_path}.')
+                    os.rename(moved_file_path, new_file_path)
+                print("Copied", image_files[0], "to", new_file_path)
             else:
                 print("No image files found in", subfolder_path)
         else:
-            print("Path does not exist:", subfolder_path)
+            print("*******************Path does not exist:*******************\n", subfolder_path)
+
+
+

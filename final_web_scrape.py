@@ -102,6 +102,7 @@ def save_image(image_url, directory='xkcd'):
         for chunk in response.iter_content(100_000):
             image_file.write(chunk)
 
+
 def download_xkcd_comics():
     """Downloads all XKCD comics and saves them in a local directory."""
     url = 'https://xkcd.com'
