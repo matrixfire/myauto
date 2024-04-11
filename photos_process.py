@@ -91,6 +91,18 @@ def merge_and_save_images_corrected(base_image_path, second_image_path, factor=0
             base_img.save(new_base_image_path)
 
 
+def change_file_name(input_path):
+    path_without_extension, extension = os.path.splitext(input_path)
+    counter = 1  # Start with 1 as we'll be appending this to the filename if it exists.
+    new_path = input_path  # Start with the original path
+    # Keep incrementing the counter and updating the filename until we find one that doesn't exist.
+    while os.path.exists(new_path):
+        new_path = f"{path_without_extension}({counter}){extension}"
+        counter += 1
+    return new_path
+
+
+
 def merge_and_save_images_corrected_lt(base_image_path, second_image_path_lt, factor=0.7):
     """
     Adjusts the function to resize the second image to 61.8% of the base image's height, ensuring the resized second
@@ -111,22 +123,76 @@ def merge_and_save_images_corrected_lt(base_image_path, second_image_path_lt, fa
             print(second_image_path)
             with Image.open(second_image_path) as second_img:
                 resize_height = int(base_height * factor)
-                second_img_resized = second_img.resize((resize_height*second_img.size[0]//second_img.size[1], resize_height))
+                resize_width = int(resize_height*second_img.size[0]//second_img.size[1])
+                second_img_resized = second_img.resize((resize_width, resize_height))
 
                 # Calculate the position to paste the resized second image
                 # Ensure it's within the base image and equidistant from the top, bottom, and right edge
                 spacing = (base_height - resize_height) // 2
-                x_position = base_width_ - resize_height - spacing
+                x_position = base_width_ - resize_width - spacing
                 y_position = spacing
 
                 # Paste the resized second image onto the base image at the calculated position
                 base_img.paste(second_img_resized, (x_position, y_position))
 
                 # Save the modified image back to the base image path
-                new_base_image_path = 'new_' + base_image_path
-            base_width_ -= resize_height*second_img.size[0]//second_img.size[1] *1.2
+                # new_base_image_path = 'new_' + base_image_path
+                # new_base_image_path = change_file_name(new_base_image_path)
+            base_width_ -= resize_height*second_img.size[0]//second_img.size[1] *1
             base_width_ = int(base_width_)
+        new_base_image_path = os.path.join(os.path.dirname(base_image_path), "new_" + os.path.basename(base_image_path))
+        new_base_image_path = change_file_name(new_base_image_path)
         base_img.save(new_base_image_path)
+
+
+
+
+
+
+
+
+def copy_files_by_list(source_folder, str_list, output_folder):
+    # Ensure output folder exists, if not, create it
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Get all files in the source folder
+    source_files = os.listdir(source_folder)
+
+    # Track found files to handle items with no corresponding file
+    found_files = set()
+
+    # Iterate over each item in the list
+    for item in str_list:
+        # Flag to check if the file was found for this item
+        file_found = False
+
+        # Check each file in the source folder
+        for file in source_files:
+            # If the item matches the file basename (without extension)
+            if item in os.path.splitext(file)[0] and len(item)==len(os.path.splitext(file)[0]):# == item:
+                # Mark as found
+                file_found = True
+                found_files.add(item)
+
+                # Copy the file to the output folder
+                src_file_path = os.path.join(source_folder, file)
+                dst_file_path = os.path.join(output_folder, file)
+                shutil.copy2(src_file_path, dst_file_path)
+                print(f"Copied '{file}' to '{output_folder}'.")
+
+        if not file_found:
+            print(f"No file found for '{item}'.")
+
+    # Check for items with no corresponding file
+    for item in set(str_list) - found_files:
+        print(f"No corresponding file found for '{item}'.")
+
+
+
+
+
+
 
 
 

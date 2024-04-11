@@ -17,9 +17,6 @@ def bitch():
     c = "core" # 找到问题核心
     h = "higer vision" # 更高的视角和维度看问题
 
-    
-
-
 
 def cells_2_list(txt=''):
     '''still have bugs...'''

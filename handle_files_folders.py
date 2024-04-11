@@ -434,20 +434,41 @@ f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.i
 f2 = lambda input_path: [folder for folder in os.listdir(input_path)]
 g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
 g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)]
+lt2 = list(map(lambda x: reg.search(x).group() if reg.search(x) else "none", lt))
+
+b = list(filter(lambda x: "xxx" in x, g2(r'C:\Users\Administrator\Desktop\very_temp')))
 
 
 import re
 import random
 
-def change_file_name(input_path):
+def change_file_name_(input_path):
     import random
+    path_without_extension, extension = os.path.splitext(input_path)
+
     dirname = os.path.dirname(input_path)
     basename = os.path.basename(input_path)
-    new_base = f'({random.randint(1000, 9999)})'+ basename
-    return os.path.join(dirname, new_base)
+    # new_base = f'({random.randint(1000, 9999)})'+ basename
+    # new_path = os.path.join(dirname, new_base)
+    new_path = path_without_extension+'(1)' + extension
+    return new_path
+
+
+def change_file_name(input_path):
+    path_without_extension, extension = os.path.splitext(input_path)
+    counter = 1  # Start with 1 as we'll be appending this to the filename if it exists.
+    new_path = input_path  # Start with the original path
+    # Keep incrementing the counter and updating the filename until we find one that doesn't exist.
+    while os.path.exists(new_path):
+        new_path = f"{path_without_extension}({counter}){extension}"
+        counter += 1
+    return new_path
+
+
+
 
 def copy_first_images(input_path, output_folder):
-    sku_regex = re.compile(r'\d+[a-zA-Z]')
+    sku_regex = re.compile(r'\d+[a-zA-Z]?')
     # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
     # Get all subfolders within the input path
@@ -472,12 +493,14 @@ def copy_first_images(input_path, output_folder):
             if image_files:
                 # Get the path of the first image file
                 first_image_path = os.path.join(subfolder_path, image_files[0])
+                _, extension = os.path.splitext(first_image_path)
                 # Copy the first image file to the output folder
                 shutil.copy(first_image_path, output_folder)
                 print(f'copied file {first_image_path} to folder {output_folder}.')
                 moved_file_name = os.path.basename(first_image_path)
                 moved_file_path = os.path.join(output_folder, moved_file_name)
-                new_file_name = f'({sku}){moved_file_name}'
+                # new_file_name = f'({sku}){moved_file_name}'
+                new_file_name = f'{sku}'+ extension
                 new_file_path = os.path.join(os.path.dirname(moved_file_path), new_file_name)
                 try:
                     os.rename(moved_file_path, new_file_path)
