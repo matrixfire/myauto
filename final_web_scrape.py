@@ -161,6 +161,9 @@ browser.quit()
 .clear()
 .submit()
 .click()
+.get_attribute("name")
+
+
 
 title页面标题
 page_source 页面源码
@@ -185,6 +188,16 @@ refresh()页面刷新
 
 find_element()系列：用于定位单个的页面元素。
 find_elements()系列：用于定位一组页面元素，获取到的是一组列表。
+
+
+
+browser.execute_script("alert('这是js弹窗代码')")
+
+browser.execute_script("alert('这是js弹窗代码')")
+browser.switch_to.alert.accept()
+
+browser.execute_script("window.scrollTo(20,1000)")
+browser.execute_script("window.open('https://www.baidu.com')")
 
 By.ID
 By.NAME
