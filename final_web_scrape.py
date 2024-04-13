@@ -202,4 +202,147 @@ switch_to.frame(XX)
 switch_to.parent_frame()
 switch_to.alert
 
+
+
+
+https://blog.csdn.net/Everly_/article/details/133784236
 '''
+
+
+
+
+import os
+import pickle
+import time
+from selenium import webdriver
+
+# URLs
+DAMAI_URL = "https://www.damai.cn/"
+LOGIN_URL = "https://passport.damai.cn/login?ru=https%3A%2F%2Fwww.damai.cn%2F"
+TARGET_URL = 'https://detail.damai.cn/item.htm?spm=a2oeg.search_category.0.0.77f24d15RWgT4o&id=654534889506&clicktitle=%E5%A4%A7%E4%BC%97%E7'
+
+class Concert:
+    def __init__(self):
+        self.status = 0  # 状态,表示如今进行到何种程度
+        self.login_method = 1  # {0:模拟登录,1:Cookie登录}自行选择登录方式
+        self.driver = webdriver.Chrome(executable_path='chromedriver.exe')  # 默认Chrome浏览器
+
+    def set_cookie(self):
+        self.driver.get(DAMAI_URL)
+        print("###请点击登录###")
+        while self.driver.title.find('大麦网-全球演出赛事官方购票平台') != -1:
+            time.sleep(1)
+        print('###请扫码登录###')
+
+        while self.driver.title != '大麦网-全球演出赛事官方购票平台-100%正品、先付先抢、在线选座！':
+            time.sleep(1)
+        print("###扫码成功###")
+        pickle.dump(self.driver.get_cookies(), open("cookies.pkl", "wb"))
+        print("###Cookie保存成功###")
+        self.driver.get(TARGET_URL)
+
+    def get_cookie(self):
+        try:
+            cookies = pickle.load(open("cookies.pkl", "rb"))  # 载入cookie
+            for cookie in cookies:
+                cookie_dict = {
+                    'domain': '.damai.cn',  # 必须有，不然就是假登录
+                    'name': cookie.get('name'),
+                    'value': cookie.get('value')
+                }
+                self.driver.add_cookie(cookie_dict)
+            print('###载入Cookie###')
+        except Exception as e:
+            print(e)
+
+    def login(self):
+        if self.login_method == 0:
+            self.driver.get(LOGIN_URL)
+            print('###开始登录###')
+        elif self.login_method == 1:
+            if not os.path.exists('cookies.pkl'):
+                self.set_cookie()
+            else:
+                self.driver.get(TARGET_URL)
+                self.get_cookie()
+
+    def enter_concert(self):
+        print('###打开浏览器，进入大麦网###')
+        self.login()
+        self.driver.refresh()
+        self.status = 2
+        print("###登录成功###")
+
+    def isElementExist(self, element):
+        try:
+            self.driver.find_element_by_xpath(element)
+            return True
+        except:
+            return False
+
+    def choose_ticket(self):
+        if self.status == 2:  # If logged in successfully
+            print("="*30)
+            print("###开始进行日期及票价选择###")
+            while self.driver.title.find('确认订单') == -1:
+                try:
+                    buybutton = self.driver.find_element_by_class_name('buybtn').text
+                    if buybutton == "提交缺货登记":
+                        self.status = 2
+                        self.driver.get(TARGET_URL)
+                        print('###抢票未开始，刷新等待开始###')
+                        continue
+                    elif buybutton == "立即预定":
+                        self.driver.find_element_by_class_name('buybtn').click()
+                        self.status = 3  # Status updated to 'ticket selecting'
+                    elif buybutton == "立即购买":
+                        self.driver.find_element_by_class_name('buybtn').click()
+                        self.status = 4  # Status updated to 'purchasing'
+                    elif buybutton == "选座购买":
+                        self.driver.find_element_by_class_name('buybtn').click()
+                        self.status = 5  # Status updated to 'seat selecting'
+                except Exception as e:
+                    print('###未跳转到订单结算界面###', e)
+                title = self.driver.title
+                if title == '选座购买':
+                    self.choice_seats()  # Call choice_seats if it's time to select seats
+                elif title == '确认订单':
+                    self.check_order()  # Check order when ready
+                    break
+
+
+    def choice_seats(self):
+        print('###请进行座位选择###')
+        while self.driver.title == '选座购买':
+            while self.isElementExist('//*[@id="app"]/div[2]/div[2]/div[1]/div[2]/img'):
+                # Assuming the existence of the image indicates seats have not yet been selected
+                print('请快速的选择您的座位！！！')
+            # Once seats are selected, confirm the selection
+            while self.isElementExist('//*[@id="app"]/div[2]/div[2]/div[2]/div'):
+                # Assuming this element exists when it's time to confirm seat selection
+                self.driver.find_element_by_xpath('//*[@id="app"]/div[2]/div[2]/div[2]/button').click()
+                break  # Exit the loop after confirming seat selection
+
+    def check_order(self):
+        if self.status in [3, 4, 5]:  # If at the stage of confirming order
+            print('###开始确认订单###')
+            try:
+                # Select the first ticket buyer by default or apply any necessary configurations
+                self.driver.find_element_by_xpath('//*[@id="container"]/div/div[2]/div[2]/div[1]/div/label').click()
+            except Exception as e:
+                print("###购票人信息选中失败，自行查看元素位置###", e)
+            # Final step to submit the order
+            time.sleep(0.5)  # Wait a bit for page elements to load properly
+            self.driver.find_element_by_xpath('//div[@class = "w1200"]//div[2]//div//div[9]//button[1]').click()
+
+    def finish(self):
+        self.driver.quit()
+
+if __name__ == '__main__':
+    try:
+        con = Concert()
+        con.enter_concert()
+        con.choose_ticket()
+    except Exception as e:
+        print(e)
+        con.finish()
