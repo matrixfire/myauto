@@ -582,6 +582,93 @@ extract_and_combine_py_files(folder_to_extract, output_filename)
 print(f"Combined .py files saved to {output_filename}")
 
 
+
+
+import pandas as pd
+import os
+
+# Load the Excel file
+df = pd.read_excel(r'C:\Users\Administrator\Desktop\very_temp\test.xlsx')
+
+# Directory where images are stored
+image_directory = 'products_imgs/'
+
+# Function to find image for each SKU
+def find_image(sku):
+    for file in os.listdir(image_directory):
+        if file.startswith(sku):  # assuming image starts with SKU
+            return os.path.join(image_directory, file)
+    return "No Image Found"
+
+# Apply the function to each SKU in the dataframe
+df['Image Link'] = df['SKU'].apply(find_image)
+
+# Save the updated DataFrame back to Excel
+df.to_excel('updated_file.xlsx', index=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def modify_excel(excel_path):
+    # Load the existing workbook
+    wb_old = openpyxl.load_workbook(excel_path)
+    ws_old = wb_old.active
+
+    # Create a new workbook
+    new_excel_name = os.path.splitext(os.path.basename(excel_path))[0]
+    new_excel_path = os.path.join(os.path.dirname(excel_path), f"{new_excel_name} (modified).xlsx")
+    wb_new = openpyxl.Workbook()
+    ws_new = wb_new.active
+
+    # Copy the first 5 columns from the old workbook to the new workbook
+    for row in ws_old.iter_rows(min_row=1, max_col=5, max_row=ws_old.max_row, values_only=True):
+        ws_new.append(row)
+
+    # Add "OK" to the sixth column in each row of the new workbook
+    for row_idx in range(1, ws_new.max_row + 1):
+        old_value = ws_new.cell(row=row_idx, column=5).value
+        # ws_new.cell(row=row_idx, column=6).value = str(old_value) + "OK"
+        img_path = os.path.join(r"C:\Users\Administrator\Desktop\very_temp\products_imgs", f"{old_value}.jpg")
+        print(img_path)
+        if not os.path.exists(img_path):
+            print(f"not found {img_path}")
+        else:
+            try:
+                _insert_image_into_excel(wb_new, img_path, new_excel_path, cell_reference=f'F{row_idx}', img_width=100)
+                print("Insert success")
+                break
+            except Exception as e:
+                print(e)
+                break
+
+    # Save the new workbook
+    wb_new.save(new_excel_path)
+
+
+folder_path = r'C:\Users\Administrator\Desktop\very_temp\temp'
+
+output_path = r'C:\Users\Administrator\Desktop\very_temp\out_new.xlsx'
 '''
 
 
