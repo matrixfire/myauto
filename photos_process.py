@@ -588,15 +588,17 @@ import pandas as pd
 import os
 
 # Load the Excel file
-df = pd.read_excel(r'C:\Users\Administrator\Desktop\very_temp\test.xlsx')
+df = pd.read_excel(r'C:\Users\Administrator\Desktop\very_temp\items.xlsx')
 
 # Directory where images are stored
-image_directory = 'products_imgs/'
+image_directory = r'C:\Users\Administrator\Desktop\very_temp\products_imgs'
 
 # Function to find image for each SKU
 def find_image(sku):
+    # Convert sku to string to ensure compatibility with startswith
+    sku = str(sku)
     for file in os.listdir(image_directory):
-        if file.startswith(sku):  # assuming image starts with SKU
+        if file.startswith(sku):  # Now comparing strings with strings
             return os.path.join(image_directory, file)
     return "No Image Found"
 

@@ -7,6 +7,23 @@ from pathlib import Path
 import json
 
 
+email_subjects = [
+    "Join Reobrix: Elevate the World of Building Blocks as Our Next MOC Designer!",
+    "Reobrix is Searching for Creative Minds in MOC Design – Let’s Collaborate!",
+    "Got a Passion for Building? Reobrix Wants You as Our MOC Designer!",
+    "Enhance Your Creative Journey with Reobrix – Seeking MOC Designers Now!",
+    "Collaborate with Reobrix to Shape the Future of Building Blocks!",
+    "Reobrix Needs Your Expertise in MOC Design – Let's Build Something Great!",
+    "Calling All Building Block Innovators – Partner with Reobrix as a MOC Designer!",
+    "Are You the Next Influencer for Reobrix? Join Us in Redefining Building Blocks!",
+    "Help Us Inspire Builders Everywhere – Become a Reobrix MOC Designer!",
+    "Your Creativity Is Wanted: Join Reobrix’s Team of Elite MOC Designers!"
+]
+
+# Print the list to verify its content
+print(email_subjects)
+
+
 def extractDataFromExcel(templatefile):
     try:
         wb = openpyxl.load_workbook(templatefile)
@@ -111,6 +128,11 @@ def f2():
 
 def foxmail(n=3):
     '''import pyautogui; pyautogui.mouseInfo()'''
+
+    import json, random
+
+    with open('my_list.json', 'r') as file:
+        mylist = json.load(file)
     email_number = n
     cache_list = extractDataFromExcel(r'temp_email\\gui_temp.xlsx')
     history_json = r'temp_email\\history_json.json'
@@ -153,13 +175,17 @@ def foxmail(n=3):
         # pyautogui.write(title)# x biaoti
         # time.sleep(0.9)
 
-        # time.sleep(1.2)
-        # pyautogui.click(p3) # titile
+        time.sleep(1.2)
+        pyautogui.click(p3) # titile
         # pyautogui.write(title)
+        pyautogui.write(random.choice(email_subjects))
 
         time.sleep(2)
         pyautogui.click(p4) # content
-        pyautogui.write(words)
+        
+
+        # pyautogui.write(words)
+        pyautogui.write(random.choice(mylist))
 
 
         # pyautogui.click(31, 42) #send
@@ -198,7 +224,8 @@ def foxmail(n=3):
             if r.n > 1:
                 next(r)
 
-     
+import json
+
 
 if __name__ == "__main__":
     number = input('How many accounts: ')
