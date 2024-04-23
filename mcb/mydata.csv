@@ -41,3 +41,24 @@ def find_emails(txt=''):
     pyperclip.copy('\n'.join(result_list))
     # print(f'\nTotal: {len(no_dup)}')
     return result_list"
+url,https://reobrix.com/
+formally,explain formally and intuitively what is  {{}} and what it can be used  but using one sentence 
+subfolders,"import os
+f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
+f2 = lambda input_path: [folder for folder in os.listdir(input_path)]
+g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)]"
+rewrite,"Rewrite the text below and make it easy for a beginner to understand:
+{{}}"
+pip2,pip install {{}} -i https://pypi.tuna.tsinghua.edu.cn/simple
+eng,"I'm learning english ,help me optimize below english, with the same meaning but more authentic:
+{{}}
+"
+bat,"@echo off
+
+start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
+
+start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
+
+exit"
+post,"Come up with 5 social media posts for Facebook that {{}} our spaceship model and including the approprate hash tags for building blocks, and including our website link https://reobrix.com/."
