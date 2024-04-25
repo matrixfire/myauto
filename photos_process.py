@@ -57,39 +57,6 @@ gIm.transpose(Image.FLIP_TOP_BOTTOM).save('vertical_flip.png')
 
 
 
-def merge_and_save_images_corrected(base_image_path, second_image_path, factor=0.7):
-    """
-    Adjusts the function to resize the second image to 61.8% of the base image's height, ensuring the resized second
-    image is pasted within the right side of the base image. The center of the second image will be equidistant from
-    the upper, lower, and right side of the base image. This version also ensures the spacing on the right side of the
-    base image is the same as the spacing to the sides of the second image. The final image is saved over the base image
-    path, effectively updating the original base image.
-    """
-    from PIL import Image
-
-    # Open the base image
-    with Image.open(base_image_path) as base_img:
-        base_width, base_height = base_img.size
-        print(f"Base image size: {base_img.size}")
-
-        # Open the second image and resize it to 61.8% of the base image's height
-        with Image.open(second_image_path) as second_img:
-            resize_height = int(base_height * factor)
-            second_img_resized = second_img.resize((resize_height*second_img.size[0]//second_img.size[1], resize_height))
-
-            # Calculate the position to paste the resized second image
-            # Ensure it's within the base image and equidistant from the top, bottom, and right edge
-            spacing = (base_height - resize_height) // 2
-            x_position = base_width - resize_height - spacing
-            y_position = spacing
-
-            # Paste the resized second image onto the base image at the calculated position
-            base_img.paste(second_img_resized, (x_position, y_position))
-
-            # Save the modified image back to the base image path
-            new_base_image_path = 'new_' + base_image_path
-            base_img.save(new_base_image_path)
-
 
 def change_file_name(input_path):
     path_without_extension, extension = os.path.splitext(input_path)
@@ -145,6 +112,65 @@ def merge_and_save_images_corrected_lt(base_image_path, second_image_path_lt, fa
         base_img.save(new_base_image_path)
 
 
+
+
+
+
+def merge_and_save_images_corrected_lt_whole(base_image_path, second_image_path_lt, factor=0.7):
+    """
+    This function resizes each image in second_image_path_lt to a height that is 70% of the base image's height,
+    ensuring all are the same size. Each image's width-to-height ratio is checked to be within 10% of 3/4.
+    Images are pasted side by side, closely to each other, ensuring the distance from the leftmost and rightmost
+    images to the base image's borders are equal. The final image is saved over the base image path, effectively
+    updating the original base image.
+    """
+    from PIL import Image
+    import os
+
+    # Open the base image
+    with Image.open(base_image_path) as base_img:
+        base_width, base_height = base_img.size
+        print(f"Base image size: {base_img.size}")
+
+        # Resize height for all images
+        resize_height = int(base_height * factor)
+        
+        # Initialize variables for pasting images
+        total_width = 0
+        images_resized = []
+        valid_ratios = True
+
+        # Process each image
+        for second_image_path in second_image_path_lt:
+            with Image.open(second_image_path) as second_img:
+                ratio = second_img.width / second_img.height
+                if not (0.675 <= ratio <= 0.825):
+                    print(f"Image {second_image_path} ratio {ratio:.2f} is out of the acceptable range.")
+                    valid_ratios = False
+                    continue
+
+                # Calculate resized width to maintain the same height
+                resize_width = int(resize_height * second_img.width / second_img.height)
+                second_img_resized = second_img.resize((resize_width, resize_height))
+                images_resized.append(second_img_resized)
+                total_width += resize_width
+
+        if not valid_ratios:
+            return
+        
+        # Calculate the starting x position
+        spacing = (base_width - total_width) // 2
+        
+        # Paste images side by side
+        current_x = spacing
+        for img in images_resized:
+            base_img.paste(img, (current_x, (base_height - resize_height) // 2))
+            current_x += img.width
+
+        # Save the modified image
+        new_base_image_path = os.path.join(os.path.dirname(base_image_path), "updated_" + os.path.basename(base_image_path))
+        base_img.save(new_base_image_path)
+        print(f"Modified image saved as {new_base_image_path}")
 
 
 

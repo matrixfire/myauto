@@ -217,7 +217,7 @@ def foxmail(n=3):
 
             autowork(email, words, title)
 
-            sleep_time = random.randint(10, max_time)
+            sleep_time = random.randint(30, max_time)
             time.sleep(sleep_time//email_number)
 
             # pyautogui.click((58,17)); time.sleep(1)
