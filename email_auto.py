@@ -226,13 +226,8 @@ def emailProcess(infoFromExcel, emailClient, emailContents):
         emailContents (EmailContents): An object to manage retrieval of message and title templates.
     """
     global global_counter, timeInterval
-    print('work!')
-    time.sleep(3.7)
-    print('Debug:!!!!!', timeInterval)
 
     cache_list = infoFromExcel
-    print('Extracted info done.')
-    print("Rows: ", len(cache_list))
 
     json_history_file = f"{emailClient.sender.split('@')[0]}-{emailClient.emailProvider}.json"
     print('Json file is located at:', json_history_file)
