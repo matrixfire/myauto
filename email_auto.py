@@ -12,48 +12,6 @@ import pyinputplus as pyip
 
 
 
-def getTemplateInfo(contentTemplate, multiMsg):
-    """
-    Get template information such as email template message, title, and time.
-    """
-    # Regular expressions for content and subject extraction
-    myregC = re.compile(r'c"(.*?)"', re.DOTALL)
-    myregS = re.compile(r's"(.*?)"', re.DOTALL)
-    
-    # Modified regex patterns
-    myregCa = re.compile(r'cb"(.*?)"', re.DOTALL)  # modified from ca to cb
-    myregSa = re.compile(r'sa"(.*?)"', re.DOTALL)
-    
-    # Regex to find numeric time values in the template
-    myregT = re.compile(r'\$(\d*?)\$', re.DOTALL)  # this one I think is okay
-    
-    # Read the content template file
-    with open(contentTemplate, encoding='utf-8') as f:
-        raw_txt = f.read()
-    
-    # Determine which regex to use based on multiMsg flag
-    if multiMsg == 1 or multiMsg == '':
-        myregContent = myregC
-        myregSubject = myregS
-    else:
-        myregContent = myregCa
-        myregSubject = myregSa
-    
-    # Extracting all occurrences of message texts and subject texts
-    message_texts = myregContent.findall(raw_txt)
-    subject_texts = myregSubject.findall(raw_txt)
-    
-    # Extract time interval, handle exceptions if regex search fails
-    try:
-        time_text = myregT.search(raw_txt).group(1)
-        timeInterval = float(time_text)
-        print('timeInterval is: ', timeInterval)
-    except Exception as e:
-        timeInterval = 0
-        print('timeInterval is: ', timeInterval)
-
-    return message_texts, subject_texts, timeInterval
-
 
 class EmailClient:
     """ SMTP email client.
@@ -541,16 +499,18 @@ if __name__ == '__main__':
     # Define base directory and file paths
     base_dir = 'temp_email'
     templatefile_name = 'email_auto.xlsx'
-    contentfile_name = 'template.txt'
     templatefile = os.path.join(base_dir, templatefile_name)
-    contentTemplate = os.path.join(base_dir, contentfile_name)
+
 
     # User interaction to determine processing parameters
     emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
     print('multiMsg is', multiMsg)
 
     # Retrieve template information and extract data from Excel
-    message_texts, subject_texts, timeInterval = getTemplateInfo(contentTemplate, multiMsg)
+    message_texts, subject_texts, timeInterval = getTemplateInfo(contentTemplate, multiMsg) # ？？？？
+
+
+
     infoFromExcel = extractDataFromExcel(templatefile, excelTabId)
 
     # Process emails based on the specified mode
@@ -566,3 +526,20 @@ if __name__ == '__main__':
     elif multiMsg == 5:  # groupC
         print(f'{multiMsg} means: Entering groupC')
         muiltiEmails(infoFromExcel, groupC)
+
+
+
+
+'''
+Notes:
+
+import itertools
+
+list1 = [1, 2]
+list2 = ['a', 'b']
+perms = list(itertools.permutations(list1))
+product = list(itertools.product(list1, list2))
+
+
+
+'''
