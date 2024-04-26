@@ -496,18 +496,20 @@ if __name__ == '__main__':
     global_counter = 0
     mutex = threading.Lock()
 
-    # Define base directory and file paths
+    # Define base directory and file paths; in other words, where does my recipients email addresses sit
     base_dir = 'temp_email'
     templatefile_name = 'email_auto.xlsx'
     templatefile = os.path.join(base_dir, templatefile_name)
 
 
     # User interaction to determine processing parameters
-    emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
-    print('multiMsg is', multiMsg)
+    # emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
+    # print('multiMsg is', multiMsg)
+
+
 
     # Retrieve template information and extract data from Excel
-    message_texts, subject_texts, timeInterval = getTemplateInfo(contentTemplate, multiMsg) # ？？？？
+    # message_texts, subject_texts, timeInterval = getTemplateInfo(contentTemplate, multiMsg) # ？？？？
 
 
 
