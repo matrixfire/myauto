@@ -540,6 +540,11 @@ if __name__ == '__main__':
     recipients_emails_list = list(filter(lambda x: len(x) > 0, recipients_emails_list))
 
     print(recipients_emails_list)
+
+
+    # Set the email account for sender or senders
+
+
     # User interaction to determine processing parameters
     # emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
     # print('multiMsg is', multiMsg)
