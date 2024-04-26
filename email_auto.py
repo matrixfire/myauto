@@ -153,25 +153,54 @@ def save_email_history(email, emailsSent, json_history_file):
 
 
 
-def extractDataFromExcel(templatefile, sheetNumber):
+
+def extractDataFromExcel(templatefile, sheetNumber=0, header=False):
     """
-    Returns a list containing data extracted from an Excel workbook.
+    Extracts data from an Excel workbook.
+
+    Args:
+        templatefile (str): Path to the Excel workbook.
+        sheetNumber (int): The sheet number to extract data from, 1-based index.
+        header (bool): If True, skips the first row assuming it is the header.
+
+    Returns:
+        list: A list of lists containing the extracted data. Each inner list represents a row.
+
+    Raises:
+        FileNotFoundError: If the specified file does not exist.
+        IndexError: If the sheet number is out of range.
+        Exception: For any other issues that arise during execution.
     """
     try:
+        # Load the workbook and select the specified sheet by index
         wb = openpyxl.load_workbook(templatefile)
         print(f'Sheet names list: {wb.sheetnames}')
-        sheet = wb[wb.sheetnames[sheetNumber - 1]]
+        if sheetNumber:
+            sheet = wb[wb.sheetnames[sheetNumber - 1]]
+        else:
+            sheet = wb.active
 
+        # Extract data from the sheet
         cache_list = []
-        for i in range(2, sheet.max_row + 1):  # Go through every row
+        for i in range(1, sheet.max_row + 1):  # Iterate through each row
             temp_list_for_row = []
-            for j in range(1, sheet.max_column + 1):
+            for j in range(1, sheet.max_column + 1):  # Iterate through each column in the row
                 temp_list_for_row.append(sheet.cell(row=i, column=j).value)
             cache_list.append(temp_list_for_row)
-        return cache_list
+
+        # Skip the first row if header is True
+        return cache_list[1:] if not header else cache_list
+
+    except FileNotFoundError:
+        print("Error: The file does not exist. Please check the file path.")
+        sys.exit(1)
+    except IndexError:
+        print("Error: Sheet number is out of range. Please check the sheet number.")
+        sys.exit(1)
     except Exception as e:
-        print('Make sure the excel template exists:', str(e))
-        sys.exit()
+        print(f"An error occurred: {str(e)}")
+        sys.exit(1)
+
 
 
 def autoEmail(emailClient, email, title, msg, emailsSent, json_history_file):
@@ -462,6 +491,8 @@ def divideList2Parts(alist, parts=2):
         temp_dict[i % parts].append(v)
     return temp_dict
 
+
+
 def muiltiEmails(infoFromExcel, group):
     """
     Manages sending emails using multiple threads, each handling a part of the list.
@@ -482,6 +513,12 @@ def muiltiEmails(infoFromExcel, group):
 
 
 
+import re
+
+def extract_email(text):
+    email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    match = re.search(email_pattern, text)
+    return match.group(0) if match else ''
 
 
 
@@ -496,7 +533,13 @@ if __name__ == '__main__':
     templatefile_name = 'email_auto.xlsx'
     templatefile = os.path.join(base_dir, templatefile_name)
 
+    # Get the recipients emails along with its associated info
+    infoFromExcel = extractDataFromExcel(templatefile) # for test reason, I just extract first tab
 
+    recipients_emails_list = [extract_email(" ".join([str(i) for i in sublist])) for sublist in infoFromExcel]
+    recipients_emails_list = list(filter(lambda x: len(x) > 0, recipients_emails_list))
+
+    print(recipients_emails_list)
     # User interaction to determine processing parameters
     # emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
     # print('multiMsg is', multiMsg)
@@ -508,7 +551,7 @@ if __name__ == '__main__':
 
 
 
-    infoFromExcel = extractDataFromExcel(templatefile, excelTabId)
+    
 
     # Process emails based on the specified mode
     if multiMsg in [1, 2] or multiMsg == '':
