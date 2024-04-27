@@ -1,124 +1,116 @@
 import openpyxl, re, time, random, sys, json, os, datetime
 import smtplib
+
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+
 from email.mime.application import MIMEApplication 
 from email.utils import formataddr
 import traceback
 import threading
 
 import pyinputplus as pyip
+from pathlib import Path
+from jinja2 import Template
 
+
+
+
+email_subjects = [
+    "Explore New Horizons with Reobrix Building Blocks!",
+    "Reobrix Building Blocks: Unleash Your Creativity!",
+    "Build Your Dreams with Reobrix Building Blocks!",
+    "Reobrix News: Latest Innovations in Building Blocks!",
+    "Transform Your World with Reobrix Building Blocks!",
+    "Discover the Art of Building with Reobrix Blocks!",
+    "Reobrix Building Blocks: Perfect for Every Builder!",
+    "Get Creative with Reobrix’s Newest Building Blocks!",
+    "Why Reobrix Building Blocks Are Right for You!",
+    "Elevate Your Building Experience with Reobrix!"
+]
 
 
 
 class EmailClient:
     """ SMTP email client.
-     connect and log in to an SMTP server, send an email, and disconnect from the server
-      
+    Connect and log in to an SMTP server, send an email, and disconnect from the server.
+    """
+    def __init__(self, smtp_domain, port):
+        self.smtp_obj = None
+        self.sender = ''
+        self.email_counter = 0
+        self.smtp_domain = smtp_domain
+        self.port = port
+
+    def connect_tls(self):
+        """Connect to an SMTP Server using STARTTLS."""
+        self.smtp_obj = smtplib.SMTP(self.smtp_domain, self.port)
+        self.smtp_obj.ehlo()  # Sending the SMTP “Hello” message
+        self.smtp_obj.starttls()  # Starting TLS encryption
+
+    def connect_ssl(self):
+        """Connect to an SMTP Server using SSL.
+        If the smtplib.SMTP() call is not successful, your SMTP server might not support TLS on port 587.
+        In this case, you will need to create an SMTP object using smtplib.SMTP_SSL() and port 465 instead.
         """
-    def __init__(self, emailProvider, loginInfoList, sender_name='Bill'):
-        self.emailProvider = emailProvider
-        self.loginInfoList = loginInfoList
-        self.sender = loginInfoList[0]
-        self.sender_name = sender_name
-        self.daily_capacity = 3
-        self.emailCounter = 0
-        self.aroused = False
+        self.smtp_obj = smtplib.SMTP_SSL(self.smtp_domain, self.port)
+        self.smtp_obj.ehlo()
 
-        if not self.loginInfoList[0].startswith('bill'):
-            self.sender_name = 'Alice'
-
-        print(f'Email provider: {emailProvider}, email sender: {self.sender}')
-
-    def connect(self):
-        connection_settings = {
-            'qq': ("smtp.qq.com", 170),
-            'yahoo': ("smtp.mail.yahoo.com", 170),
-            '163': ("smtp.163.com", 170),
-            'qiye163': ("smtp.ym.163.com", 600),
-            '126': ("smtp.126.com", 170),
-            'tencent': ("smtp.exmail.qq.com", 170),
-            'aol': ("smtp.aol.com", None),
-            'sohu': ("smtp.sohu.com", None),
-            'outlook': ("smtp-mail.outlook.com", 100),
-            'gmail': ("smtp.gmail.com", None),
-            'kingtrans': ("smtp.exmail.qq.com", 600),
-            'cnkingtrans': ("smtp.exmail.qq.com", 600),
-            'szkingtrans': ("smtp.qiye.aliyun.com", 500),
-            'zohomail': ("smtp.zoho.com", 100),
-            'yandex': ("smtp.yandex.ru", 100),
-            'kaifang': ("smtp-n.global-mail.cn", 1000)
-        }
-
-        domain, capacity = connection_settings.get(self.emailProvider, (None, None))
-        if domain:
-            self.connectSSL(domain)
-            if capacity:
-                self.daily_capacity = capacity
-
-        print(f'{self.sender}: connected')
-
-    
-    def connectTLS(self, smtpDomain):
-        self.smtpObj = smtplib.SMTP(smtpDomain, 587) # Connecting to an SMTP Server
-        self.smtpObj.ehlo() # Sending the SMTP “Hello” Message
-        self.smtpObj.starttls() # Starting TLS Encryption
-
-    def connectSSL(self, smtpDomain):
-        '''If the smptlib.SMTP() call is not successful, your SMTP server might not support TLS on port 587. 
-        In this case, you will need to create an SMTP object using smtplib.SMTP_SSL() and port 465 instead.'''
-        self.smtpObj = smtplib.SMTP_SSL(smtpDomain, 465)
-        self.smtpObj.ehlo()
-
-    def login(self):
-        mail_user = self.loginInfoList[0]
-        mail_password = self.loginInfoList[1]
-        if mail_password == '':
-            mail_password = pyip.inputPassword('Password for email: ')
+    def login(self, email_address, email_password=""):
+        """Log in to the SMTP server."""
+        if email_password == '':
+            email_password = pyip.inputPassword('Password for email: ')
         try:
-            self.smtpObj.login(mail_user, mail_password) # Logging In to the SMTP Server
-            print(f'{self.sender}: logged in')
-        except:
-            print(f'{self.sender}, login failed')
+            self.smtp_obj.login(email_address, email_password)  # Logging in to the SMTP server
+            print(f'{email_address}: logged in')
+        except Exception as e:
+            print(f'{email_address}, login failed: {str(e)}')
 
     def send(self, from_address, to_address, msg):
-        self.smtpObj.sendmail(from_address, to_address, msg) # Sending an Email
-        self.emailCounter += 1
+        """Send an email."""
+        self.smtp_obj.sendmail(from_address, to_address, msg)
+        self.email_counter += 1
 
     def disconnect(self):
-        self.smtpObj.quit() # Sending an Email
+        """Disconnect from the SMTP server."""
+        self.smtp_obj.quit()
         print('Email SMTP server quitted!')
 
 
 
-class EmailContents:
-    """
-    Handles retrieving email messages and titles from templates.
-    """
-    def __init__(self, titleList, msgList, multi=1):
-        self.titles = titleList
-        self.messages = msgList
-        self.multi = multi
 
-    def get_message(self):
-        return self.get_first_message() if self.multi == 1 or self.multi == '' else self.get_any_message()
+text = "Hello,\nThis is a plain text email.\nRegards,\nYour Name"
+sent_from = "matrixbox@qq.com"
+send_to = "bill@reobrix.com"
 
-    def get_title(self):
-        return self.get_first_title() if self.multi == 1 or self.multi == '' else self.get_any_title()
+# Create MIMEText object
+msg = MIMEText(text, 'plain')
+msg['Subject'] = 'Simple Plain Text Email'
+msg['From'] = sent_from
+msg['To'] = send_to
 
-    def get_first_message(self):
-        return self.messages[0]
 
-    def get_first_title(self):
-        return self.titles[0]
+# # Create the MIME multipart message
+# msg = MIMEMultipart('alternative')
+# msg['Subject'] = 'An interesting email'
+# msg['From'] = sent_from
+# msg['To'] = ', '.join(send_to)
 
-    def get_any_message(self):
-        return random.choice(self.messages)
+# # Attach both plain text and HTML parts to the message
+# part_plain = MIMEText(text, 'plain')
+# part_html = MIMEText(html, 'html')
+# msg.attach(part_plain)
+# msg.attach(part_html)
 
-    def get_any_title(self):
-        return random.choice(self.titles)
+
+# ec = EmailClient()
+# ec.connect_ssl('smtp.qq.com', 465)
+# ec.login('349500371@qq.com', 'fuutvkptczbrbhcd')
+# # ec.send('349500371@qq.com', 'bill@reobrix.com', 'Subject: So long.\nDear Alice, so long and thanks for all the fish.\nSincerely, Bob')
+# ec.send('349500371@qq.com', 'bill@reobrix.com', msg.as_string())
+# ec.disconnect()
+
 
 
 def get_stored_info(json_history_file):
@@ -246,93 +238,7 @@ def autoEmail(emailClient, email, title, msg, emailsSent, json_history_file):
         save_email_history(email, emailsSent, json_history_file)
 
 
-def emailProcess(infoFromExcel, emailClient, emailContents):
-    """
-    Processes the email sending operation from a list of extracted Excel data.
-    Parameters:
-        infoFromExcel (list): A list of data extracted from an Excel file.
-        emailClient (EmailClient): The client object that manages email sending operations.
-        emailContents (EmailContents): An object to manage retrieval of message and title templates.
-    """
-    global global_counter, timeInterval
-
-    cache_list = infoFromExcel
-
-    json_history_file = f"{emailClient.sender.split('@')[0]}-{emailClient.emailProvider}.json"
-    print('Json file is located at:', json_history_file)
-    emailsSent = get_stored_info(json_history_file)
-    emailsSentAdd = [e_tuple[0] for e_tuple in emailsSent]
-
-    daily_counter = 0
-    for i, row_data in enumerate(cache_list, start=1):
-        mutex.acquire()
-        global_counter += 1
-        mutex.release()
-
-        # Initialize dictionary for formatting email content
-        d = {f'f{index + 1}': content if content else '' for index, content in enumerate(row_data)}
-
-        # Detect which field is the email
-        email = d['f1']
-        if email in emailsSentAdd and email != '349500371@qq.com':
-            print(f'Email No.{i}: {email} already sent.')
-            continue
-
-        daily_counter += 1
-        if daily_counter >= emailClient.daily_capacity + 1:
-            print('May have reached daily capacity.')
-            break
-
-        message_text = emailContents.get_message()
-        subject_text = emailContents.get_title()
-        msg = message_text.format(**d)
-        title = subject_text.format(**d)
-
-        if timeInterval == 0:
-            time2sleep = random.randint(1, 80)
-        else:
-            timeInterval = max(timeInterval, 12)
-            time2sleep = timeInterval + random.randint(1, 10)
-
-        try:
-            autoEmail(emailClient, email, title, msg, emailsSent, json_history_file)
-            print(f'Email No.{i} (global: {global_counter}) finished, sleep for {time2sleep}s')
-            lucky_wait = 0
-            r = random.randint(1, 100)
-            if r <= 2:
-                lucky_wait = 1000
-            elif r <= 5:
-                lucky_wait = 500
-            elif r <= 10:
-                lucky_wait = 200
-            elif r <= 30:
-                lucky_wait = 30
-            elif r <= 50:
-                lucky_wait = 10
-            print(f'Luckily waiting for {lucky_wait}s')
-            time.sleep(lucky_wait)
-            
-            if i == len(cache_list):
-                print('Email task finished.')
-                sys.exit(0)
-            time.sleep(time2sleep)
-        except Exception as e:
-            print(f'{emailClient.sender}: {email} failed, error is: {e}')
-            time.sleep(1)
-
     
-
-def get_num(jsondata):
-    """
-    Calculate the number of emails sent on the current day based on the json data.
-    Parameters:
-        jsondata (list): List of tuples containing email information.
-    Returns:
-        int: The number of emails sent today.
-    """
-    current_time = datetime.datetime.now()
-    time_str = f'{current_time.year}-{current_time.month}-{current_time.day}'
-    return sum(1 for email_tuple in jsondata if email_tuple[1] == time_str)
 
 
 def getAccountInfo(myAccounts):
@@ -380,116 +286,76 @@ def ask(myAccounts, templatefile):
 
 # initial settings
 
-qq = ['amazingtransition1@qq.com', 'lzeigqinjesxbegg', 'qq']
-qq2 = ['349500371@qq.com', 'fuutvkptczbrbhcd', 'qq']
-qq3 = ['mangocutting@qq.com', 'znczqetqojqidcfa', 'qq']
-qq4 = ['divideandconquer@qq.com', 'mbabhgdhdchdbhhh', 'qq']
-qq5 = ['475853055@qq.com', 'vvwzavwulcvybhib', 'qq']
+# qq = ['amazingtransition1@qq.com', 'lzeigqinjesxbegg', 'qq']
+# qq2 = ['349500371@qq.com', 'fuutvkptczbrbhcd', 'qq']
+# qq3 = ['mangocutting@qq.com', 'znczqetqojqidcfa', 'qq']
+# qq4 = ['divideandconquer@qq.com', 'mbabhgdhdchdbhhh', 'qq']
+# qq5 = ['475853055@qq.com', 'vvwzavwulcvybhib', 'qq']
 
 
-# e163 = ['matrixbox@163.com', 'GWNRCXEXINIVGQQA', '163']
-E163 = ['mangocutting@163.com', 'EXXUDFPSVFXHPASH', '163']
-ee1_163 = ['ivoq1690cb@163.com', 'ex535491', '163']
-ee2_163 = ['tgraed451pql@163.com', 'sv620835', '163']
+# # e163 = ['matrixbox@163.com', 'GWNRCXEXINIVGQQA', '163']
+# E163 = ['mangocutting@163.com', 'EXXUDFPSVFXHPASH', '163']
+# ee1_163 = ['ivoq1690cb@163.com', 'ex535491', '163']
+# ee2_163 = ['tgraed451pql@163.com', 'sv620835', '163']
 
 
-yahoo = ['matrixbox@yahoo.com', 'vtioleoeammkhhuy', 'yahoo']
-# yahoo2 = ['greatinequality@yahoo.com', 'cvxvttvowldnyazz']
+# yahoo = ['matrixbox@yahoo.com', 'vtioleoeammkhhuy', 'yahoo']
+# # yahoo2 = ['greatinequality@yahoo.com', 'cvxvttvowldnyazz']
 
-tencent = ['bill.zou@kingtrans.com.cn', 'Ks2022', 'kingtrans']
-
-
-
-ali = ['bill.zou@szkingtrans.com', 'Alihtam51409', 'szkingtrans']
-
-tencent2 = ['sales06@cnkingtrans.com', 'Tthtam51409', 'cnkingtrans']
-qy163 = ['sales06@kingtrans.cc', 'kingtrans123', 'qiye163']
-newEmail1 = ['sales06@kingtrans.ltd', 'Elhtam51409', 'kaifang']
-newEmail2 = ['sales09@kingtrans.ltd', 'Elhtam51409', 'kaifang']
-
-
-# mix = ['bill@mix.com', 'mix']
-yandex1 = ['whynotbinary@yandex.com', 'lgmflbuqtqqozhkp', 'yandex']
-# yandex2 = ['recursivedream@yandex.com', 'azxffljchocjwjex', 'yandex'] # may spam
-# yandex3 = ['greatiteration@yandex.com', 'rreekalaxwugdqhn', 'yandex']  # may spam
-
-
-e126 = ['recursivesolution@126.com', 'GWRQEDXRJEROECVO']
-aol = ['binarysearch01@aol.com', 'kiahlbyxmempunlc']
-sohu = ['binarysearch01@sohu.com', 'L01KRIHMFTO']
-outlook = ['recursivedream@outlook.com', ''] #300 emails zhantingle! no use!
-outlook2 = ['algorithmfuture@outlook.com', 'Elhtam51409'] #300 emails
-gmail = ['mangocutting@gmail.com', 'ynfobiwnrcpnrelj']
-e139 = ['matrixfire@139.com', 'b8e20770c1597ccb2000']
+# tencent = ['bill.zou@kingtrans.com.cn', 'Ks2022', 'kingtrans']
 
 
 
-gmail2 = ['zmeng049@gmail.com', 'BILL0415', 'gmail']
+# ali = ['bill.zou@szkingtrans.com', 'Alihtam51409', 'szkingtrans']
 
-# zohomail = ['matrixbox@zohomail.com', 'YLN4rvqeZNJx']
+# tencent2 = ['sales06@cnkingtrans.com', 'Tthtam51409', 'cnkingtrans']
+# qy163 = ['sales06@kingtrans.cc', 'kingtrans123', 'qiye163']
+# newEmail1 = ['sales06@kingtrans.ltd', 'Elhtam51409', 'kaifang']
+# newEmail2 = ['sales09@kingtrans.ltd', 'Elhtam51409', 'kaifang']
 
-'''ivoq1690cb@163.com----ex535491
-tgraed451pql@163.com----sv620835'''
 
-myAccounts = []
-myAccounts.append(tencent)
-myAccounts.append(ali)
-myAccounts.append(tencent2)
-myAccounts.append(qq)    
-myAccounts.append(qq2)
-myAccounts.append(qq3)    
-myAccounts.append(qq4)    
-myAccounts.append(qq5)      
-myAccounts.append(yahoo)    
-myAccounts.append(qy163)
-myAccounts.append(newEmail1)
-myAccounts.append(newEmail2)
+# # mix = ['bill@mix.com', 'mix']
+# yandex1 = ['whynotbinary@yandex.com', 'lgmflbuqtqqozhkp', 'yandex']
+# # yandex2 = ['recursivedream@yandex.com', 'azxffljchocjwjex', 'yandex'] # may spam
+# # yandex3 = ['greatiteration@yandex.com', 'rreekalaxwugdqhn', 'yandex']  # may spam
 
-myAccounts.append(gmail2)
-groupA = [tencent2, ali, tencent] # 3
-groupB = [qq, qq2, qq3, qq4, qq5] # , yahoo] 4
-groupC = [tencent, newEmail2] #, yandex1, outlook2] 5 qy163, 
+
+# e126 = ['recursivesolution@126.com', 'GWRQEDXRJEROECVO']
+# aol = ['binarysearch01@aol.com', 'kiahlbyxmempunlc']
+# sohu = ['binarysearch01@sohu.com', 'L01KRIHMFTO']
+# outlook = ['recursivedream@outlook.com', ''] #300 emails zhantingle! no use!
+# outlook2 = ['algorithmfuture@outlook.com', 'Elhtam51409'] #300 emails
+# gmail = ['mangocutting@gmail.com', 'ynfobiwnrcpnrelj']
+# e139 = ['matrixfire@139.com', 'b8e20770c1597ccb2000']
 
 
 
+# gmail2 = ['zmeng049@gmail.com', 'BILL0415', 'gmail']
 
-def emailWork(emailClient, infoFromExcel):
-    """
-    Manages the entire email sending workflow from connecting to sending and disconnecting.
-    Parameters:
-        emailClient (EmailClient): The email client instance to manage connections and sending.
-        infoFromExcel (list): List of extracted email information from Excel.
-    """
-    emailContents = EmailContents(titleList=subject_texts, msgList=message_texts, multi=multiMsg)
-    print('Template Info extracted!')
-    print('timeInterval is', timeInterval)
+# # zohomail = ['matrixbox@zohomail.com', 'YLN4rvqeZNJx']
 
-    try:
-        emailClient.connect()
-        emailClient.login()
-        emailProcess(infoFromExcel, emailClient, emailContents)
-        emailClient.disconnect()
-    except Exception as e:
-        print('Failed in the first attempt!', e)
-        emailClient.connect()
-        emailClient.login()
-        emailProcess(infoFromExcel, emailClient, emailContents)
-        emailClient.disconnect()
+# '''ivoq1690cb@163.com----ex535491
+# tgraed451pql@163.com----sv620835'''
 
+# myAccounts = []
+# myAccounts.append(tencent)
+# myAccounts.append(ali)
+# myAccounts.append(tencent2)
+# myAccounts.append(qq)    
+# myAccounts.append(qq2)
+# myAccounts.append(qq3)    
+# myAccounts.append(qq4)    
+# myAccounts.append(qq5)      
+# myAccounts.append(yahoo)    
+# myAccounts.append(qy163)
+# myAccounts.append(newEmail1)
+# myAccounts.append(newEmail2)
 
-def divideList2Parts(alist, parts=2):
-    """
-    Divides a list into the specified number of parts.
-    Parameters:
-        alist (list): The list to divide.
-        parts (int): The number of parts to divide the list into.
-    Returns:
-        dict: A dictionary with parts as keys and list segments as values.
-    """
-    temp_dict = {i: [] for i in range(parts)}
-    for i, v in enumerate(alist):
-        temp_dict[i % parts].append(v)
-    return temp_dict
+# myAccounts.append(gmail2)
+# groupA = [tencent2, ali, tencent] # 3
+# groupB = [qq, qq2, qq3, qq4, qq5] # , yahoo] 4
+# groupC = [tencent, newEmail2] #, yandex1, outlook2] 5 qy163, 
+
 
 
 
@@ -513,7 +379,6 @@ def muiltiEmails(infoFromExcel, group):
 
 
 
-import re
 
 def extract_email(text):
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -524,16 +389,16 @@ def extract_email(text):
 
 
 if __name__ == '__main__':
-    # Initialize global counter and mutex for thread synchronization
+    # 1, Initialize global counter and mutex for thread synchronization
     global_counter = 0
     mutex = threading.Lock()
 
-    # Define base directory and file paths; in other words, where does my recipients email addresses sit
+    # 2, Define base directory and file paths; in other words, where does my recipients email addresses sit
     base_dir = 'temp_email'
     templatefile_name = 'email_auto.xlsx'
     templatefile = os.path.join(base_dir, templatefile_name)
 
-    # Get the recipients emails along with its associated info
+    # 3, Get the recipients emails along with its associated info
     infoFromExcel = extractDataFromExcel(templatefile) # for test reason, I just extract first tab
 
     recipients_emails_list = [extract_email(" ".join([str(i) for i in sublist])) for sublist in infoFromExcel]
@@ -542,35 +407,69 @@ if __name__ == '__main__':
     print(recipients_emails_list)
 
 
-    # Set the email account for sender or senders
+    # 4, decide what mode to use to send bulk emails: the default mode is using one email to send, with random contents;
 
-
-    # User interaction to determine processing parameters
-    # emailAcc, emailDomainName, excelTabId, multiMsg = ask(myAccounts, templatefile)
-    # print('multiMsg is', multiMsg)
-
-
-
-    # Retrieve template information and extract data from Excel
-    # message_texts, subject_texts, timeInterval = getTemplateInfo(contentTemplate, multiMsg) # ？？？？
-
-
-
+    # 4.1 , set up the sender account
+    ec = EmailClient('smtp.qq.com', 465)
+    ec.connect_ssl()
+    sender_address = 'matrixbox@qq.com'
+    ec.login(sender_address, 'fuutvkptczbrbhcd')
     
+    # 4.2, prepare the contents
+    path = Path('words1.json')
+    words_str = path.read_text()
+    words = json.loads(words_str)
 
-    # Process emails based on the specified mode
-    if multiMsg in [1, 2] or multiMsg == '':
-        emailClient = EmailClient(emailDomainName, emailAcc)
-        emailWork(emailClient, infoFromExcel)
-    elif multiMsg == 3:  # groupA
-        print(f'{multiMsg} means: Entering groupA')
-        muiltiEmails(infoFromExcel, groupA)
-    elif multiMsg == 4:  # groupB
-        print(f'{multiMsg} means: Entering groupB')
-        muiltiEmails(infoFromExcel, groupB)
-    elif multiMsg == 5:  # groupC
-        print(f'{multiMsg} means: Entering groupC')
-        muiltiEmails(infoFromExcel, groupC)
+    path2 = Path(base_dir+'/signature.txt')
+    signature_html = path2.read_text(encoding='utf-8')
+    # print(signature_html)
+
+    path3 = Path(base_dir+'/email_body.txt')
+    body_html = path3.read_text(encoding='utf-8')
+    print(body_html)
+
+    # Create MIMEText object
+    
+    
+    
+    
+    # msg['To'] = send_to
+    # 5, bulking sending
+    for email_addr in recipients_emails_list[:]:
+        subject = random.choice(email_subjects)
+        text = random.choice(words)
+
+        # msg = MIMEText(text, 'plain')
+        msg = MIMEMultipart('alternative') # html
+        msg['Subject'] = subject
+        msg['From'] = sender_address
+        msg['To'] = email_addr
+        msg['Reply-To'] = 'bill@reobrix.com'
+
+        body_html = body_html.replace("{{email_signature}}", signature_html) # html
+        template = Template(body_html)
+        html_content = template.render(email_body=text)
+
+        part_text = MIMEText(text, 'plain')
+        part_html = MIMEText(html_content, 'html') # html
+
+
+        msg.attach(part_text) # html
+        msg.attach(part_html) # html
+
+        # ec.send(sender_address, email_addr, msg.as_string())
+        ec.smtp_obj.send_message(msg)
+
+        time_2_wait = random.randint(11, 200)
+        print(f'{sender_address}->{email_addr}\nSubjects: {subject}\n{text}\n')
+
+        global_counter += 1
+        print(f'Email(s) already sent: {global_counter}.\nWaiting for {time_2_wait}secs.')
+        time.sleep(time_2_wait)
+
+    ec.disconnect()
+
+
 
 
 
