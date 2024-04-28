@@ -413,6 +413,9 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
     # ec = EmailClient('smtp.qq.com', 465)
     ec = EmailClient(smtp_info[0], smtp_info[1])
     ec.connect_ssl()
+
+    if not sender_password:
+        sender_password = pyip.inputPassword('Password for email: ')
     ec.login(sender_address, sender_password)
     # sender_address = 'matrixbox@qq.com'
     # sender_address = 'amazingtransition1@qq.com'
