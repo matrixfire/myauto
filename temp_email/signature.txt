@@ -26,7 +26,7 @@
         <span lang="EN-US" style="font-size: 11pt; font-family: Arial, sans-serif;">
             <a href="https://reobrix.com/">
                 <img
-                    src="file:///D:/Program%20Files/Foxmail%207.2/Global/Signatures/images/6674_6674_%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_202404(04-13-14-20-27).png"
+                    src="https://cdn.shopify.com/s/files/1/0632/2939/5192/files/small_logo.png"
                     border="0"
                     width="40"
                     height="40"

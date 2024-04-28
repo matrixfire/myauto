@@ -387,19 +387,19 @@ def extract_email(text):
 
 
 
-
-if __name__ == '__main__':
+def email_worker(sender_address, sender_password="", smtp_info=None):
     # 1, Initialize global counter and mutex for thread synchronization
     global_counter = 0
-    mutex = threading.Lock()
-
     # 2, Define base directory and file paths; in other words, where does my recipients email addresses sit
     base_dir = 'temp_email'
     templatefile_name = 'email_auto.xlsx'
     templatefile = os.path.join(base_dir, templatefile_name)
 
     # 3, Get the recipients emails along with its associated info
-    infoFromExcel = extractDataFromExcel(templatefile) # for test reason, I just extract first tab
+    sheet_num = pyip.inputInt("excel tab: ", blank=True, default=0)
+    # if not sheet_num:
+    #     sheet_num = 0
+    infoFromExcel = extractDataFromExcel(templatefile, sheet_num) # for test reason, I just extract first tab
 
     recipients_emails_list = [extract_email(" ".join([str(i) for i in sublist])) for sublist in infoFromExcel]
     recipients_emails_list = list(filter(lambda x: len(x) > 0, recipients_emails_list))
@@ -410,10 +410,14 @@ if __name__ == '__main__':
     # 4, decide what mode to use to send bulk emails: the default mode is using one email to send, with random contents;
 
     # 4.1 , set up the sender account
-    ec = EmailClient('smtp.qq.com', 465)
+    # ec = EmailClient('smtp.qq.com', 465)
+    ec = EmailClient(smtp_info[0], smtp_info[1])
     ec.connect_ssl()
-    sender_address = 'matrixbox@qq.com'
-    ec.login(sender_address, 'fuutvkptczbrbhcd')
+    ec.login(sender_address, sender_password)
+    # sender_address = 'matrixbox@qq.com'
+    # sender_address = 'amazingtransition1@qq.com'
+    # ec.login(sender_address, 'fuutvkptczbrbhcd')
+    
     
     # 4.2, prepare the contents
     path = Path('words1.json')
@@ -429,11 +433,6 @@ if __name__ == '__main__':
     print(body_html)
 
     # Create MIMEText object
-    
-    
-    
-    
-    # msg['To'] = send_to
     # 5, bulking sending
     for email_addr in recipients_emails_list[:]:
         subject = random.choice(email_subjects)
@@ -458,9 +457,14 @@ if __name__ == '__main__':
         msg.attach(part_html) # html
 
         # ec.send(sender_address, email_addr, msg.as_string())
-        ec.smtp_obj.send_message(msg)
+        try:
+            ec.smtp_obj.send_message(msg)
+        except smtplib.SMTPServerDisconnected:
+            ec.connect_ssl()
+            ec.login(sender_address, sender_password)            
+            ec.smtp_obj.send_message(msg)
 
-        time_2_wait = random.randint(11, 200)
+        time_2_wait = random.randint(21, 300)
         print(f'{sender_address}->{email_addr}\nSubjects: {subject}\n{text}\n')
 
         global_counter += 1
@@ -468,6 +472,13 @@ if __name__ == '__main__':
         time.sleep(time_2_wait)
 
     ec.disconnect()
+
+
+
+if __name__ == '__main__':
+    # email_worker('amazingtransition1@qq.com')
+    email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
+
 
 
 
