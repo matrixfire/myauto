@@ -60,7 +60,7 @@ class EmailClient:
     def login(self, email_address, email_password=""):
         """Log in to the SMTP server."""
         if email_password == '':
-            email_password = pyip.inputPassword('Password for email: ')
+            email_password = pyip.inputPassword(f'Password for email({email_address}): ')
         try:
             self.smtp_obj.login(email_address, email_password)  # Logging in to the SMTP server
             print(f'{email_address}: logged in')
@@ -415,7 +415,7 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
     ec.connect_ssl()
 
     if not sender_password:
-        sender_password = pyip.inputPassword('Password for email: ')
+        sender_password = pyip.inputPassword(f'Password for email({sender_address}): ')
     ec.login(sender_address, sender_password)
     # sender_address = 'matrixbox@qq.com'
     # sender_address = 'amazingtransition1@qq.com'
@@ -480,7 +480,8 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 
 if __name__ == '__main__':
     # email_worker('amazingtransition1@qq.com')
-    email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
+    # email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
+    email_worker(pyip.inputEmail("Email Address: "), smtp_info=('smtp.qq.com', 465))
 
 
 
