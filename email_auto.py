@@ -481,11 +481,21 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 if __name__ == '__main__':
     # email_worker('amazingtransition1@qq.com')
     # email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
-    email_worker(pyip.inputEmail("Email Address: "), smtp_info=('smtp.qq.com', 465))
+    email_worker(pyip.inputEmail("Email Address: "), smtp_info=(pyip.inputStr("smtp server: "), pyip.inputInt("smtp serverport(default 465): ", default=465, blank=True)))
 
 
 
 
+
+# d = {"work":[60,5, 20], "js":[10, 5, 10], "chatgpt": [10, 5, 10], "machine learning basics": [10, 5, 5], "digital marketing learning": [10, 5,10]}
+# import random
+# random_jobs = []
+# for i, lt in d.items():
+#     for _ in range(lt[0]):
+#         random_jobs.append(i)
+# def f():
+#     job = random.choice(random_jobs)
+#     print(f"{job}: {random.randint(d[job][1], d[job][2])}")
 
 
 
