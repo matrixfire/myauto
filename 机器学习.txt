@@ -84,3 +84,22 @@ feature extraction->training
 7. **超参数调整**：微调模型的超参数就像调整烤箱温度或烘烤时间以获得完美批次的饼干一样。你调整这些设置来改善模型的性能。
 
 8. **部署**：一旦你有了完美的一批饼干，你可以与他人分享。同样，在机器学习中，你部署模型以在新数据上进行预测或分类，比如识别图像中的数字或过滤垃圾邮件。
+
+
+Yes, training is a crucial step in the machine learning process, but there are several other important steps involved as well. Here's a general overview of the typical machine learning process:
+
+1. **Data Collection**: Gather a dataset that contains examples of the problem you want to solve. For OCR, this would be images containing numbers, and for spam filters, this would be emails labeled as spam or not spam.
+
+2. **Data Preprocessing**: Clean and preprocess the data to ensure it's in a suitable format for training. This may involve tasks like removing noise from images, converting text to lowercase, and tokenizing text data.
+
+3. **Feature Extraction**: Extract relevant features from the data. This step is crucial because it transforms the data into a format that the machine learning algorithm can work with. For OCR, this might involve extracting features like the shape and orientation of numbers in images. For spam filters, this could involve extracting features like the frequency of certain words in emails.
+
+4. **Model Selection**: Choose a machine learning model to use for the task. This could be a decision tree, a neural network, or any other model that is suitable for the problem at hand.
+
+5. **Training**: Train the chosen model on the training data. During training, the model learns the patterns and relationships in the data that will enable it to make predictions or classifications.
+
+6. **Evaluation**: Evaluate the trained model on a separate dataset called the validation or test dataset. This step helps assess how well the model generalizes to new, unseen data.
+
+7. **Hyperparameter Tuning**: Fine-tune the model's hyperparameters to improve its performance. Hyperparameters are settings that control the learning process of the model, such as the learning rate in neural networks.
+
+8. **Deployment**: Once the model is trained and evaluated satisfactorily, deploy it to make predictions or classifications on new data.
