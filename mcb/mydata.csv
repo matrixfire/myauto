@@ -1,14 +1,19 @@
 key,value
 pip,"""-i https://pypi.tuna.tsinghua.edu.cn/simple"""
-address,ÉîÛÚÁú»ªÇø½õÉĞÉÌÒµÂ¥ËÄÂ¥3A06×ŞÏÈÉú17727962501
+address,æ·±åœ³é¾™ååŒºé”¦å°šå•†ä¸šæ¥¼å››æ¥¼3A06é‚¹å…ˆç”Ÿ17727962501
 reobrix,"Our company which in china, with brand name Reobrix, is making and selling building blocks like Lego's (but you can not use LEGO word as company or product intro too often as Lego is other brand name, which would violate laws ) below is a BRANDINTRODUCTION
 :
 REOBRIX BUILDING BLOCK MOLDS ARE SOLDIN MORE THAN 150 COUNTRIES AND REGIONSAROUND THE WORLD. THE CHANNELS COVERE-COMMERCE, SHOPPING MALLS, SUPERMAR-KETS AND SPECIALTY STORES, ETC., AND ARECURRENTLY SOLD AT MORE THAN 2000 SALESTERMINALS AROUND THE WORLD.WE FOCUSON THE CONSTRUCTION AND DEVELOPMENTOF BRAND. CULTURE, AND CREATIVITY. SINCETHE ESTABLISHMENT OF THE COMPANY. WEHAVE REGISTERED A NUMBER OF DESIGN ANDUTILITY MODEL MAJORS. WE HAVE ALSOSIGNED PRODUCT AUTHORIZATIONS WITHMANY WELL-KNOWN BRANDS, AND THEPRODUCTS WE HAVE LAUNCHED HAVE ALSOBEEN FAVORED BY MANY CUSTOMERS.RECOGNIZED AND ESTABLSHED LONG-TERMCOOPERATION."
 email,bill@reobrix.com
 t1,Ideas 
 easy,Explain {{}} in simple and easy terms that any beginner can understand.
-easy-ch,ÓÃÈÎºÎ³õÑ§Õß¶¼ÄÜÀí½âµÄ¼òµ¥Ò×¶®µÄÊõÓï½âÊÍ[²åÈëÖ÷Ìâ]¡£
-cn,"pls translate english into chinese, keep each line or sentence of english above and translation below:
+easy-ch,ç”¨ä»»ä½•åˆå­¦è€…éƒ½èƒ½ç†è§£çš„ç®€å•æ˜“æ‡‚çš„æœ¯è¯­è§£é‡Š[æ’å…¥ä¸»é¢˜]ã€‚
+cn,"pls translate below english into chinese, keep each line or sentence of english above and translation below, for example, if i want u tranalste :""how are you? I'm Bill."", then you should give me output like this:
+1, how are you?
+ä½ å¥½å—ï¼Ÿ
+2, I'm Bill
+æˆ‘æ˜¯Bill
+below is what i want you to translate:
 {{}}"
 t2,Similar 
 sum,Summarize the text below and give me a list of bullet points with key insights and the most important facts.
@@ -61,4 +66,19 @@ start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
 start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
 
 exit"
-post,"Come up with 5 social media posts for Facebook that {{}} our spaceship model and including the approprate hash tags for building blocks, and including our website link https://reobrix.com/."
+post,"Come up with 5 social media posts for Facebook that highlights our {{}} model and including the approprate hash tags for building blocks, and including our website link https://reobrix.com/.
+"
+missing,"Hello,
+
+We're sorry to hear about the missing parts from your Reobrix building blocks. 
+
+To sort this out quickly, please get in touch with the seller or the store where you bought the blocks. They're set up to assist with any problems you might have after buying.
+
+If they can't help you out, please let us know. We're here to make sure you're taken care of.
+
+Thanks for reaching out,
+
+Best regards
+Reobrix Team"
+edit,"Edit and proofread for grammar, spelling, and clarity for below:
+{{}}"

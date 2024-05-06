@@ -21,6 +21,30 @@ Why ML grow:
 2, 信息处理能力
 3, 输出结果
 
+感知器(perceptron):
+Certainly! A perceptron is a basic unit in artificial neural networks that's inspired by how a single neuron in our brains works. It's used for binary classification, which means it decides whether an input belongs to one group or another.
+
+Here's a simple explanation:
+
+1. **Input**: Just like our senses (like eyes or ears) send signals to our brain, a perceptron takes inputs, which could be anything from numbers to colors.
+
+2. **Weights**: Each input is given a weight, which determines how important it is. For example, if we're trying to predict if it's going to rain based on the temperature and humidity, we might give more weight to humidity because it's more closely related to rain.
+
+3. **Summing**: The perceptron multiplies each input by its weight and adds them up. This is like adding up all the factors that might influence a decision.
+
+4. **Activation**: Once it has the sum, it applies a function to it. If the sum is above a certain threshold, it "fires" (like a neuron sending a signal in our brain) and decides it's in one group. If it's below the threshold, it decides it's in the other group.
+
+5. **Learning**: If the perceptron makes a mistake, it adjusts the weights to do better next time. This is how it learns from experience, much like how we learn from our mistakes.
+
+In essence, a perceptron is a simple model that tries to make decisions by weighing different factors, much like how our brains might decide whether to bring an umbrella based on the weather forecast.
+
+
+
+
+
+
+
+
 一些术语：
 为预测问题建立模型 （模型：...感知器，神经网络）
 模型中的参数
@@ -61,45 +85,19 @@ applications:
 2, OCR, speech recognition or face recognition
 4, spam filters
 
-feature extraction->training
+gather data-clean data-extract features
 
 
 
-
-
-当我们把机器学习的过程比作烘焙饼干时，可以更形象地理解每个步骤的含义：
-
-1. **数据收集**：想象一下你要烤饼干，需要收集面粉、糖和巧克力豆等所有材料。同样，在机器学习中，你需要收集所有训练模型所需的数据，比如数字图片用于光学字符识别（OCR），或者用于垃圾邮件过滤器的邮件数据。
-
-2. **数据预处理**：在开始烘焙之前，你可能需要筛面粉去除颗粒或将黄油融化至适当的浓度。同样，在机器学习中，数据预处理是清理和准备数据，使其符合模型的要求，比如去除图像中的噪声或将文本转换为小写。
-
-3. **特征提取**：当烘焙饼干时，你可能会使用饼干模具将面团切成不同的形状。在机器学习中，特征提取就像将数据转换成模型能理解的形状或形式。对于OCR，这可能涉及提取图像中数字的形状和方向等特征。
-
-4. **模型选择**：选择机器学习模型就像选择烘焙饼干的食谱一样。你需要选择一个适合你的需求和所要烘焙饼干的类型的模型。
-
-5. **训练**：训练模型就像按照食谱烤饼干一样。你根据食谱（模型）混合配料（数据），然后放入烤箱（训练模型），最终得到成品（训练好的模型）。
-
-6. **评估**：评估模型就像品尝饼干看看它们是否好吃。你使用另一组数据（验证或测试数据集）来检查你的模型在新的、未见过的数据上表现如何。
-
-7. **超参数调整**：微调模型的超参数就像调整烤箱温度或烘烤时间以获得完美批次的饼干一样。你调整这些设置来改善模型的性能。
-
-8. **部署**：一旦你有了完美的一批饼干，你可以与他人分享。同样，在机器学习中，你部署模型以在新数据上进行预测或分类，比如识别图像中的数字或过滤垃圾邮件。
 
 
 Yes, training is a crucial step in the machine learning process, but there are several other important steps involved as well. Here's a general overview of the typical machine learning process:
 
 1. **Data Collection**: Gather a dataset that contains examples of the problem you want to solve. For OCR, this would be images containing numbers, and for spam filters, this would be emails labeled as spam or not spam.
-
 2. **Data Preprocessing**: Clean and preprocess the data to ensure it's in a suitable format for training. This may involve tasks like removing noise from images, converting text to lowercase, and tokenizing text data.
-
 3. **Feature Extraction**: Extract relevant features from the data. This step is crucial because it transforms the data into a format that the machine learning algorithm can work with. For OCR, this might involve extracting features like the shape and orientation of numbers in images. For spam filters, this could involve extracting features like the frequency of certain words in emails.
-
 4. **Model Selection**: Choose a machine learning model to use for the task. This could be a decision tree, a neural network, or any other model that is suitable for the problem at hand.
-
 5. **Training**: Train the chosen model on the training data. During training, the model learns the patterns and relationships in the data that will enable it to make predictions or classifications.
-
 6. **Evaluation**: Evaluate the trained model on a separate dataset called the validation or test dataset. This step helps assess how well the model generalizes to new, unseen data.
-
 7. **Hyperparameter Tuning**: Fine-tune the model's hyperparameters to improve its performance. Hyperparameters are settings that control the learning process of the model, such as the learning rate in neural networks.
-
 8. **Deployment**: Once the model is trained and evaluated satisfactorily, deploy it to make predictions or classifications on new data.
