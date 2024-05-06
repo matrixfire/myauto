@@ -97,6 +97,25 @@ def temp_price(num_str):
     else:
         return num*3.5/e
 
+
+def tp(num_str):
+    import pyperclip
+    e = 7.1
+    num = float(num_str)
+    result = None
+    if num <= 25.8:
+        result = round(25.8*5/e, 2)
+    elif num < 100:
+        result = round(num*5/e, 2)
+    elif 100 <= num <= 300:
+        result = round(num*4.5/e, 2)
+    elif 300 < num <= 600:
+        result = round(num*4/e, 2)
+    else:
+        result = round(num*3.5/e, 2)
+    pyperclip.copy(str(result))
+    return result
+
 # 1, getting data from my own cache csv products data, and generate the data list 
 import csv
 
