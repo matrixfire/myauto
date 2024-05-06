@@ -75,57 +75,6 @@ def rename_empty_folders(path):
             shutil.move(foldername, new_name)
             print(f"Renamed '{foldername}' to '{new_name}'")
 
-import os
-import zipfile
-import shutil
-
-def extract_all_zips(path):
-    for filename in os.listdir(path):
-        if filename.endswith('.zip'):
-            zip_file_path = os.path.join(path, filename)
-            folder_name = os.path.splitext(filename)[0]  # Extract folder name from zip file name
-            folder_path = os.path.join(path, folder_name)
-            os.makedirs(folder_path, exist_ok=True)  # Create folder to extract zip contents
-            with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-                zip_ref.extractall(folder_path)  # Extract contents into the new folder
-            print(f"Extracted: {zip_file_path} to {folder_path}")
-            # Correct file names if applicable
-            for root, dirs, files in os.walk(folder_path):
-                for file in files:
-                    os.rename(os.path.join(root, file), os.path.join(root, file.encode('cp437').decode('gbk')))  
-
-
-def extract_all_zips(path):
-    """
-    Extracts all zip files found at the specified path.
-    Creates a new folder named after each zip file (without the .zip extension)
-    and extracts the contents of the zip file into this folder.
-    Corrects both file and folder names with non-ASCII characters.
-
-    Parameters:
-        path (str): The path where zip files are located.
-    """
-    for filename in os.listdir(path):
-        if filename.endswith('.zip'):
-            zip_file_path = os.path.join(path, filename)
-            folder_name = os.path.splitext(filename)[0]  # Extract folder name from zip file name
-            folder_path = os.path.join(path, folder_name)
-            os.makedirs(folder_path, exist_ok=True)  # Create folder to extract zip contents
-            with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-                zip_ref.extractall(folder_path)  # Extract contents into the new folder
-            print(f"Extracted: {zip_file_path} to {folder_path}")
-            folders.append(folder_path)
-            # Correct file and folder names recursively
-            for root, dirs, files in os.walk(folder_path, topdown=False):
-                try:
-                    correct_names(root)
-                except Exception as e:
-                    print('Correcting names failed: \n {e}\n')
-                else:
-                    print(f'correct names at {root}')
-
-
-
 
 
 def correct_names(directory):
@@ -430,10 +379,12 @@ def c(choices_list=["work", "learn"], weight_list=[30, 10]):
 # c()
     
 import os
-f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
-f2 = lambda input_path: [folder for folder in os.listdir(input_path)]
-g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))]
-g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)]
+f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs names
+f2 = lambda input_path: [folder for folder in os.listdir(input_path)] # dirs and files names
+
+g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs paths
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files names
+
 lt2 = list(map(lambda x: reg.search(x).group() if reg.search(x) else "none", lt))
 
 b = list(filter(lambda x: "xxx" in x, g2(r'C:\Users\Administrator\Desktop\very_temp')))
