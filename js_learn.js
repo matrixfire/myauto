@@ -39,3 +39,25 @@ class Enemy extends Actor {
     }
   }
 }
+
+
+
+function Cat(name) {
+  this.name = name;
+}
+Cat.prototype.sayHello = function () {
+  console.log(`Miaow! My name is ${this.name}.`);
+};
+
+
+class Dog {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHello() {
+    console.log(`Woof! My name is ${this.name}.`);
+  }
+}
+
+kiki.__proto__;

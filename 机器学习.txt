@@ -61,6 +61,11 @@ In essence, a perceptron is a simple model that tries to make decisions by weigh
 
 神经网络（neural network）
 
+误差反向传播法
+（error back-propagation）
+
+
+深度学习，强化学习
 
 
 一些术语：
