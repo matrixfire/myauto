@@ -383,7 +383,7 @@ f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.i
 f2 = lambda input_path: [folder for folder in os.listdir(input_path)] # dirs and files names
 
 g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs paths
-g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files names
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files path names
 
 lt2 = list(map(lambda x: reg.search(x).group() if reg.search(x) else "none", lt))
 
