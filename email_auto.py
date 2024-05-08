@@ -467,7 +467,7 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
             ec.login(sender_address, sender_password)            
             ec.smtp_obj.send_message(msg)
 
-        time_2_wait = random.randint(21, 300)
+        time_2_wait = random.randint(33, 333)
         print(f'{sender_address}->{email_addr}\nSubjects: {subject}\n{text}\n')
 
         global_counter += 1
