@@ -65,3 +65,4 @@ kiki.__proto__;
 
 
 let heading = document.getElementById("main-heading");
+heading.innerText;

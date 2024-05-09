@@ -68,6 +68,36 @@ In essence, a perceptron is a simple model that tries to make decisions by weigh
 深度学习，强化学习
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+支持向量机
+
+
+
+
+
+
+
+
+
+
+
+
 一些术语：
 为预测问题建立模型 （模型：...感知器，神经网络）
 模型中的参数
