@@ -61,3 +61,7 @@ class Dog {
 }
 
 kiki.__proto__;
+
+
+
+let heading = document.getElementById("main-heading");

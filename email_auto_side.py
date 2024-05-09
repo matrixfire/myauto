@@ -47,3 +47,16 @@ if valid:
 else:
     print("Email is not valid.")
     print("Error details:", verification_data)
+
+
+
+def rename_files(folder_path):
+    for filename in os.listdir(folder_path):
+        if "飞机" in filename:
+            new_filename = filename.replace("飞机", "Helicopter")
+            os.rename(os.path.join(folder_path, filename), os.path.join(folder_path, new_filename))
+    for filename in os.listdir(folder_path)
+        if "说明书" in filename:
+            new_filename = filename.replace("说明书", "Manual")
+            os.rename(os.path.join(folder_path, filename), os.path.join(folder_path, new_filename))
+
