@@ -50,7 +50,7 @@ if arg_len >= 2:
         elif not keyword:
             print("Keyword for deletion not specified.")
     elif action == 'list':
-        formatted_list = "\n".join(f"{key}: {my_shelf[key]}" for key in my_shelf.keys())
+        formatted_list = f"\n**********\n".join(f"{key}: {my_shelf[key]}" for key in my_shelf.keys())
         pyperclip.copy(formatted_list)
     elif action == 'export':
         filename = sys.argv[2] if arg_len == 3 else 'mydata.csv'
