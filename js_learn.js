@@ -66,3 +66,7 @@ kiki.__proto__;
 
 let heading = document.getElementById("main-heading");
 heading.innerText;
+
+let strong = document.querySelectorAll("#main-heading strong");
+document.querySelector
+strong[0].textContent;

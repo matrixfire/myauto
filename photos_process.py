@@ -641,7 +641,19 @@ df.to_excel('updated_file.xlsx', index=False)
 
 
 
+import pytesseract
+from PIL import Image
 
+def extract_text_from_image(image_path):
+    # Open the image file
+    img = Image.open(image_path)
+    # Specify the path to the Tesseract executable
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    # Use pytesseract to extract text
+    text = pytesseract.image_to_string(img)
+    return text
+
+ocr = extract_text_from_image
 
 
 

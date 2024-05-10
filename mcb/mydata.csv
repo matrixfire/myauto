@@ -1,19 +1,24 @@
 key,value
 pip,"""-i https://pypi.tuna.tsinghua.edu.cn/simple"""
-address,æ·±åœ³é¾™ååŒºé”¦å°šå•†ä¸šæ¥¼å››æ¥¼3A06é‚¹å…ˆç”Ÿ17727962501
+address,ÉîÛÚÁú»ªÇø½õÉĞÉÌÒµÂ¥ËÄÂ¥3A06×ŞÏÈÉú17727962501
 reobrix,"Our company which in china, with brand name Reobrix, is making and selling building blocks like Lego's (but you can not use LEGO word as company or product intro too often as Lego is other brand name, which would violate laws ) below is a BRANDINTRODUCTION
 :
 REOBRIX BUILDING BLOCK MOLDS ARE SOLDIN MORE THAN 150 COUNTRIES AND REGIONSAROUND THE WORLD. THE CHANNELS COVERE-COMMERCE, SHOPPING MALLS, SUPERMAR-KETS AND SPECIALTY STORES, ETC., AND ARECURRENTLY SOLD AT MORE THAN 2000 SALESTERMINALS AROUND THE WORLD.WE FOCUSON THE CONSTRUCTION AND DEVELOPMENTOF BRAND. CULTURE, AND CREATIVITY. SINCETHE ESTABLISHMENT OF THE COMPANY. WEHAVE REGISTERED A NUMBER OF DESIGN ANDUTILITY MODEL MAJORS. WE HAVE ALSOSIGNED PRODUCT AUTHORIZATIONS WITHMANY WELL-KNOWN BRANDS, AND THEPRODUCTS WE HAVE LAUNCHED HAVE ALSOBEEN FAVORED BY MANY CUSTOMERS.RECOGNIZED AND ESTABLSHED LONG-TERMCOOPERATION."
 email,bill@reobrix.com
 t1,Ideas 
 easy,Explain {{}} in simple and easy terms that any beginner can understand.
-easy-ch,ç”¨ä»»ä½•åˆå­¦è€…éƒ½èƒ½ç†è§£çš„ç®€å•æ˜“æ‡‚çš„æœ¯è¯­è§£é‡Š[æ’å…¥ä¸»é¢˜]ã€‚
-cn,"pls translate below english into chinese, keep each line or sentence of english above and translation below, for example, if i want u tranalste :""how are you? I'm Bill."", then you should give me output like this:
+easy-ch,ÓÃÈÎºÎ³õÑ§Õß¶¼ÄÜÀí½âµÄ¼òµ¥Ò×¶®µÄÊõÓï½âÊÍ[²åÈëÖ÷Ìâ]¡£
+cn,"pls translate below english text into chinese, keep each line or sentence of english above and translation below, for example, if i want u tranalste :""how are you? I'm Bill. I am learning.¡±, finally give me the complete translation for the text in the bottom, like: then you should give me output like this:
+·Ö¾ä·­Òë:
 1, how are you?
-ä½ å¥½å—ï¼Ÿ
+ÄãºÃÂğ£¿
 2, I'm Bill
-æˆ‘æ˜¯Bill
-below is what i want you to translate:
+ÎÒÊÇBill
+3, I am learning.
+ÎÒÕıÔÚÑ§Ï°
+
+ÕûÌå·­Òë£º¡°ÄãºÃÂğ£¿ÎÒÊÇBill¡£ÎÒÕıÔÚÑ§Ï°¡±
+
 {{}}"
 t2,Similar 
 sum,Summarize the text below and give me a list of bullet points with key insights and the most important facts.
@@ -66,8 +71,7 @@ start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
 start """" ""C:\Program Files\Tencent\WeChat\WeChat.exe""
 
 exit"
-post,"Come up with 5 social media posts for Facebook that highlights our {{}} model and including the approprate hash tags for building blocks, and including our website link https://reobrix.com/.
-"
+post,"Come up with 5 social media posts for Facebook that highlights our {{}} model and including the approprate hash tags for building blocks(better think of five or more hashtags, and be sure to include #reobrix), and including our website link https://reobrix.com/."
 missing,"Hello,
 
 We're sorry to hear about the missing parts from your Reobrix building blocks. 
@@ -82,3 +86,18 @@ Best regards
 Reobrix Team"
 edit,"Edit and proofread for grammar, spelling, and clarity for below:
 {{}}"
+28,I want to learn about {{}}. Identify and share the most important 20% of learnings from this topic that will help me understand 80% of it.
+ocr,"import pytesseract
+from PIL import Image
+
+def extract_text_from_image(image_path):
+    # Open the image file
+    img = Image.open(image_path)
+    # Specify the path to the Tesseract executable
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    # Use pytesseract to extract text
+    text = pytesseract.image_to_string(img)
+    return text
+
+ocr = extract_text_from_image
+"
