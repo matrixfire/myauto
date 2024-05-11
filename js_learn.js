@@ -70,3 +70,9 @@ heading.innerText;
 let strong = document.querySelectorAll("#main-heading strong");
 document.querySelector
 strong[0].textContent;
+
+
+
+heading.addEventListener("click", () => {
+  console.log("You clicked the heading!");
+});
