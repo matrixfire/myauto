@@ -14,6 +14,42 @@ import pyperclip
 
 
 
+def correct_names(directory):
+    """
+    Recursively corrects both file and folder names within the specified directory.
+
+    Parameters:
+        directory (str): The path to the directory to correct names in.
+    """
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            print(root, file, sep='\nxxxxx\n')
+            try:
+                os.rename(*fix_characts(root, file))
+            except Exception as e:
+                print(f'{e}')
+                
+        for folder in dirs:
+            print(root,folder, sep='\nxxxxx\n')
+            try:
+                os.rename(*fix_characts(root, folder))
+            except Exception as e:
+                print(f'{e}')
+
+
+def fix_characts(root, file_name):
+    old_name  = os.path.join(root, file_name)
+    try:
+        new_name = os.path.join(root, file_name.encode('cp437').decode('gbk'))
+    except Exception as e:
+        print(e)
+        new_name = old_name
+    return old_name, new_name
+
+
+
+
+
 def process_zip_files(folder_path, include_string):
     # unfolder all zip files, and extract the folder including some string seperately!
     # Get the list of zip files in the specified folder
@@ -75,39 +111,6 @@ def rename_empty_folders(path):
             shutil.move(foldername, new_name)
             print(f"Renamed '{foldername}' to '{new_name}'")
 
-
-
-def correct_names(directory):
-    """
-    Recursively corrects both file and folder names within the specified directory.
-
-    Parameters:
-        directory (str): The path to the directory to correct names in.
-    """
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            print(root, file, sep='\nxxxxx\n')
-            try:
-                os.rename(*fix_characts(root, file))
-            except Exception as e:
-                print(f'{e}')
-                
-        for folder in dirs:
-            print(root,folder, sep='\nxxxxx\n')
-            try:
-                os.rename(*fix_characts(root, folder))
-            except Exception as e:
-                print(f'{e}')
-
-
-def fix_characts(root, file_name):
-    old_name  = os.path.join(root, file_name)
-    try:
-        new_name = os.path.join(root, file_name.encode('cp437').decode('gbk'))
-    except Exception as e:
-        print(e)
-        new_name = old_name
-    return old_name, new_name
 
 
 
@@ -322,6 +325,20 @@ lt2 = list(map(lambda x: reg.search(x).group() if reg.search(x) else "none", lt)
 b = list(filter(lambda x: "xxx" in x, g2(r'C:\Users\Administrator\Desktop\very_temp')))
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import re
 import random
 
@@ -399,3 +416,60 @@ def copy_first_images(input_path, output_folder):
 
 
 
+
+
+
+
+import pytesseract
+from PIL import Image
+
+def extract_text_from_image(image_path):
+    # Open the image file
+    img = Image.open(image_path)
+    gray_img = img.convert('L')
+    # Specify the path to the Tesseract executable
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    # Use pytesseract to extract text
+    text = pytesseract.image_to_string(gray_img)
+    return text
+
+ocr = extract_text_from_image
+
+def main(folder_path):
+    import os
+    import pyperclip as p
+    all_text = ""
+    g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files path names
+    def remove_empty_lines(text):
+        lines = text.split('\n')
+        non_empty_lines = filter(lambda line: line.strip(), lines)
+        return '\n'.join(non_empty_lines)
+    file_path_lt = g2(folder_path)
+    for file_path in file_path_lt:
+        all_text += (ocr(file_path) + '\n')
+        print(f"{file_path} extracted.")
+    result = remove_empty_lines(all_text)
+    p.copy(result)
+    print(result)
+
+    
+
+
+
+
+from PIL import Image
+im = Image.open('captcha.jpg')
+gray = im.convert('L')
+gray.show()
+gray.save("captcha_gray.jpg")
+
+threshold = 150
+table = []
+for i in range(256):
+    if i < threshold:
+        table.append(0)
+    else:
+        table.append(1)
+out = gray.point(table, '1')
+out.show()
+out.save("captcha_thresholded.jpg")
