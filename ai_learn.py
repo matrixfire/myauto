@@ -11,3 +11,7 @@ a = np.zeros((3,4), dtype="uint32")
 a[1,2] = 66
 
 b = 11*np.ones((3,1))
+
+
+a = np.arange(12).reshape((3,4))
+a[1], a[1, :]
