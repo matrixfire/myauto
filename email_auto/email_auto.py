@@ -547,4 +547,25 @@ product = list(itertools.product(list1, list2))
 
 
 
+I now have below code, which is for purpose of recording email recipients sending histtory:
+from collections import defaultdict
+import datetime
+
+emails_history_json = defaultdict(lambda: {"total_count": 0, "history": defaultdict(int)})
+
+emails_history_json["q1@qq.com"]["total_count"] = 3
+emails_history_json["q1@qq.com"]["history"]["2022-01-21"] = 1
+emails_history_json["q1@qq.com"]["history"]["2022-06-11"] = 2
+
+which is used for reocording recipents emails history, 
+
+now help me with pyinputplus module, making a ask function, that ask user which option does user want,users should be prompted and can provide Input 1, for Email to recipients that never send before(default)
+          2, Emails to all recienpits
+          3, Emails to recienpits one weekago, 
+based on there 3 option, 
+
+
+
+
+
 '''
