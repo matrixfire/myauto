@@ -11,9 +11,40 @@ import traceback
 import threading
 
 import pyinputplus as pyip
-from pathlib import Path
 from jinja2 import Template
 
+from pathlib import Path
+
+from collections import defaultdict
+import datetime
+
+emails_history_json = defaultdict(lambda: {"total_count": 0, "history": defaultdict(int)})
+
+def get_stored_username(path):
+    """Get stored username if available."""
+    if path.exists():
+        contents = path.read_text()
+        username = json.loads(contents)
+        return username
+    else:
+        return None
+
+def get_new_username(path):
+    """Prompt for a new username."""
+    username = input("What is your name? ")
+    contents = json.dumps(username)
+    path.write_text(contents)
+    return username
+
+def greet_user():
+    """Greet the user by name."""
+    path = Path('username.json')
+    username = get_stored_username(path)
+    if username:
+        print(f"Welcome back, {username}!")
+    else:
+        username = get_new_username(path)
+        print(f"We'll remember you when you come back, {username}!")
 
 
 
@@ -481,6 +512,7 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 if __name__ == '__main__':
     # email_worker('amazingtransition1@qq.com')
     # email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
+    greet_user()
     email_worker(pyip.inputEmail("Email Address: "), smtp_info=(pyip.inputStr("smtp server: "), pyip.inputInt("smtp serverport(default 465): ", default=465, blank=True)))
 
 
