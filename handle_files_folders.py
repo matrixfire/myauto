@@ -453,7 +453,52 @@ def main(folder_path):
     print(result)
 
     
+import os
 
+def rename_path(old_path, new_name, keep_filename_suffix=False):
+    try:
+        # Check if new_name is a path or just a name
+        if os.path.isabs(new_name):
+            new_path = new_name
+        else:
+            # Split the path into directory and base name
+            directory, base_name = os.path.split(old_path)
+            
+            if keep_filename_suffix:
+                # Keep the old filename's suffix
+                file_name, file_ext = os.path.splitext(base_name)
+                new_base_name = f"{new_name}{file_ext}"
+            else:
+                new_base_name = new_name
+            
+            new_path = os.path.join(directory, new_base_name)
+        
+        # Check if the new path already exists
+        if os.path.exists(new_path):
+            # If it does, find a new name by adding a counter in parentheses
+            counter = 1
+            while True:
+                new_base_name, new_ext = os.path.splitext(new_base_name)
+                new_base_name = f"{new_base_name}({counter}){new_ext}"
+                new_path = os.path.join(directory, new_base_name)
+                if not os.path.exists(new_path):
+                    break
+                counter += 1
+        
+        # Rename the path
+        os.rename(old_path, new_path)
+        
+        # Print the success message
+        print(f"Success in renaming {os.path.basename(old_path)} to {os.path.basename(new_path)}")
+        print(f"Old path: {old_path}")
+        print(f"New path: {new_path}")
+    except FileNotFoundError:
+        print("Error: File or directory not found")
+    except Exception as e:
+        print(f"Error: {e}")
+
+import re
+sku_re = re.compile(r"\d+")
 
 
 
@@ -473,3 +518,22 @@ for i in range(256):
 out = gray.point(table, '1')
 out.show()
 out.save("captcha_thresholded.jpg")
+
+
+import os
+f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs names
+f2 = lambda input_path: [folder for folder in os.listdir(input_path)] # dirs and files names
+
+g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs paths
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files path names
+
+folders = g(r"C:\Users\Administrator\Desktop\work2024\产品视频\2024_05_13_66038 英文版")
+
+for sub_folder_path in folders:
+    new = sku_regex.search(os.path.basename(sub_folder_path))
+    if not new:
+        print(f"No sku for this folder: {os.path.basename(sub_folder_path)}")
+        continue
+    else:
+        new_name = new.group()
+        rn(sub_folder_path, new_name)
