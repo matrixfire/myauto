@@ -439,7 +439,7 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 
     input('''Input 1, Email to recipients that never send before(default)
           2, Emails to all recienpits
-          3, Emails to recienpits intelectully''')
+          3, Emails to recienpits intelectully, fibonacci sequence ''')
 
 
     # 4, decide what mode to use to send bulk emails: the default mode is using one email to send, with random contents;
