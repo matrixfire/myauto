@@ -15,6 +15,7 @@ let currentY = 0
 document.querySelector("html").addEventListener("keydown", e => {
   if (e.key == "w") {
     currentY -= 5;
+    console.log(currentY);
   } else if (e.key == "a") {
     currentX -= 5;
   } else if (e.key == "s") {

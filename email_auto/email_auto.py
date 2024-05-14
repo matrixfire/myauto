@@ -18,33 +18,54 @@ from pathlib import Path
 from collections import defaultdict
 import datetime
 
-emails_history_json = defaultdict(lambda: {"total_count": 0, "history": defaultdict(int)})
 
-def get_stored_username(path):
-    """Get stored username if available."""
+email_history_path = Path("emails_history.json")
+
+def get_email_history(path):
+    """Get email history if available."""
+    emails_history_json = defaultdict(lambda: {"total_count": 0, "history": defaultdict(int)})
     if path.exists():
         contents = path.read_text()
-        username = json.loads(contents)
-        return username
-    else:
-        return None
+        history_dict = json.loads(contents)
+        for email, data in history_dict.items():
+            emails_history_json[email]["total_count"] = data["total_count"]
+            for date, count in data["history"].items():
+                emails_history_json[email]["history"][date] = count
+        return emails_history_json
+    else: 
+        print(f"No email history file exsited.")
+        set_email_history(path)
+        return emails_history_json
 
-def get_new_username(path):
-    """Prompt for a new username."""
-    username = input("What is your name? ")
-    contents = json.dumps(username)
+def set_email_history(path):
+    """Set email_history for the 1st time."""
+    contents = json.dumps(defaultdict(lambda: {"total_count": 0, "history": defaultdict(int)}))
     path.write_text(contents)
-    return username
+    print("Email history set.")
 
-def greet_user():
-    """Greet the user by name."""
-    path = Path('username.json')
-    username = get_stored_username(path)
-    if username:
-        print(f"Welcome back, {username}!")
-    else:
-        username = get_new_username(path)
-        print(f"We'll remember you when you come back, {username}!")
+
+def email_filter(email_list, emails_history_json):
+    filtered_emails = []
+    for email in email_list:
+        if emails_history_json[email]['total_count'] < 1 or email in ["349500371@qq.com", "matrixbox@qq.com"]:
+            filtered_emails.append(email)
+    return filtered_emails
+
+
+def email_history_log(email, emails_history_json, path, today=None):
+    from datetime import datetime
+    if today is None:
+        today = datetime.now().strftime("%Y-%m-%d")
+    emails_history_json[email]["total_count"] += 1
+    emails_history_json[email]["history"][today] += 1
+    print(f"Info logged: {emails_history_json[email]}")
+    path.write_text(json.dumps(emails_history_json))
+    
+
+
+emails_history_json = get_email_history(email_history_path)
+
+
 
 
 
@@ -437,10 +458,6 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 
     print(recipients_emails_list)
 
-    input('''Input 1, Email to recipients that never send before(default)
-          2, Emails to all recienpits
-          3, Emails to recienpits intelectully, fibonacci sequence ''')
-
 
     # 4, decide what mode to use to send bulk emails: the default mode is using one email to send, with random contents;
 
@@ -472,7 +489,14 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 
     # Create MIMEText object
     # 5, bulking sending
+
+    filtered_emails = email_filter(recipients_emails_list[:], emails_history_json)
+
     for email_addr in recipients_emails_list[:]:
+        if email_addr not in filtered_emails:
+            print(f"Skipped {email_addr}.")
+            continue
+        
         subject = random.choice(email_subjects)
         text = random.choice(words)
 
@@ -502,12 +526,16 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
             ec.login(sender_address, sender_password)            
             ec.smtp_obj.send_message(msg)
 
-        time_2_wait = random.randint(33, 333)
+        time_2_wait = random.randint(39, 433)
         print(f'{sender_address}->{email_addr}\nSubjects: {subject}\n{text}\n')
 
         global_counter += 1
         print(f'Email(s) already sent: {global_counter}.\nWaiting for {time_2_wait}secs.')
-        time.sleep(time_2_wait)
+
+        email_history_log(email_addr, emails_history_json, email_history_path)
+        
+        if global_counter < len(filtered_emails):
+            time.sleep(time_2_wait)
 
     ec.disconnect()
 
@@ -516,7 +544,7 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 if __name__ == '__main__':
     # email_worker('amazingtransition1@qq.com')
     # email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
-    greet_user()
+    # greet_user()
     email_worker(pyip.inputEmail("Email Address: "), smtp_info=(pyip.inputStr("smtp server: "), pyip.inputInt("smtp serverport(default 465): ", default=465, blank=True)))
 
 
