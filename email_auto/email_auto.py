@@ -532,6 +532,10 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
         global_counter += 1
         print(f'Email(s) already sent: {global_counter}.\nWaiting for {time_2_wait}secs.')
 
+        if global_counter > 50:
+            print(f"Already sent more than 50, break.")
+            break
+
         email_history_log(email_addr, emails_history_json, email_history_path)
         
         if global_counter < len(filtered_emails):

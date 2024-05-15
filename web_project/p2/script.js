@@ -54,3 +54,12 @@ function drawCircle(x, y) {
 canvas.addEventListener("click", e => {
   drawCircle(e.offsetX, e.offsetY);
 });
+
+
+document.querySelector("#clear").addEventListener("click", () => {
+  ctx.clearRect(0, 0, width, height);
+});
+
+document.querySelector("#opacity").addEventListener("change", e => {
+  opacity = e.target.value;
+});
