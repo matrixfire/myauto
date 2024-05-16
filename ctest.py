@@ -12,8 +12,10 @@ dall-e-3
 '''
 
 from openai import OpenAI
+import pyperclip as p
+import time
 
-def chat_gpt_openai(content):
+def chat_gpt_openai_old(content):
     api_key = 'sk-G4C6rzryzKe7fzUN2c65553694454dD9915eC1DeDb0fA128'
     api_base = 'https://vip-hk-s1.zeabur.app/v1'
 
@@ -24,24 +26,87 @@ def chat_gpt_openai(content):
         messages=[
             {"role": "user", "content": content}
         ],
-            temperature=0,
-            stream=True,
-            timeout=600
-        )
+        temperature=0,
+        stream=True,
+        timeout=600
+    )
+    
     text = ''
     for chunk in rsp:
         if chunk.choices[0].finish_reason is None and chunk.choices[0].delta.content is not None:
             text += chunk.choices[0].delta.content
             print(chunk.choices[0].delta.content, end="")
-
-        # if chunk.choices:
-        #     for choice in chunk.choices:
-        #         print(choice.delta.content)
+    
     return text
 
-content = 'Ok'
-print(chat_gpt_openai(content))
 
+
+def chat_gpt_openai(content, conversation_history=[]):
+    # API key for authentication
+    api_key = 'sk-G4C6rzryzKe7fzUN2c65553694454dD9915eC1DeDb0fA128'
+    # Base URL for the OpenAI API endpoint
+    api_base = 'https://vip-hk-s1.zeabur.app/v1'
+    
+    # Initialize the OpenAI client with the API key and base URL
+    client = OpenAI(api_key=api_key, base_url=api_base)
+    
+    # Add the user's message to the conversation history
+    conversation_history.append({"role": "user", "content": content})
+    
+    # Limit the context to the last few messages if necessary
+    # This can be adjusted based on the length of conversation you want to keep
+    context_to_send = conversation_history[-10:]  # Keep only the last 10 messages in the context
+    
+    # Make a request to the OpenAI API to generate a response
+    rsp = client.chat.completions.create(
+        model='gpt-4-1106-preview',  # Model to use for generating the response
+        messages=context_to_send,  # Context (conversation history) to send with the request
+        temperature=0,  # Temperature setting for response generation (0 = deterministic)
+        # max_tokens=50,  # Limit the response to 50 tokens to save API quota
+        stream=True,  # Stream the response as it is generated
+        timeout=600  # Timeout setting for the request (in seconds)
+    )
+    
+    text = ''  # Initialize an empty string to hold the response text
+    for chunk in rsp:
+        # Check if the response chunk is still being generated and has content
+        if chunk.choices[0].finish_reason is None and chunk.choices[0].delta.content is not None:
+            text += chunk.choices[0].delta.content  # Append the content to the response text
+            print(chunk.choices[0].delta.content, end="")  # Print the content as it is received
+    
+    # Add the assistant's response to the conversation history
+    conversation_history.append({"role": "assistant", "content": text})
+    
+    return text, conversation_history  # Return the response text and updated conversation history
+
+conversation_history = []  # Initialize an empty conversation history
+
+# Example interaction
+response, conversation_history = chat_gpt_openai("Hello, My name is Bill, how are you?", conversation_history)
+print("\nResponse:", response)
+
+time.sleep(5)
+# Another interaction
+response, conversation_history = chat_gpt_openai("Can you write me an email express you wanna connect with me on linkedin?", conversation_history)
+print("\nResponse:", response)
+
+
+p.copy(response)
+
+
+
+
+# content = '''
+# I want you to act as my friend. 
+# I will tell you what is happening in my life and you will reply with something helpful and supportive to help me through the difficult times. Do not write any explanations, just reply with the advice/supportive words, which reply you limited words within 30 words at most. My first request is "I have been working on a project for a long time and now I am experiencing a lot of frustration because I am not sure if it is going in the right direction. 
+# Please help me stay positive and focus on the important things."
+
+# '''
+# content = "Can u tell me more ?"
+# answer = chat_gpt_openai(content)
+# print(answer)
+
+# p.copy(answer)
 
 
 
