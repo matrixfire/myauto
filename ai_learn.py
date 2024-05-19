@@ -15,3 +15,8 @@ b = 11*np.ones((3,1))
 
 a = np.arange(12).reshape((3,4))
 a[1], a[1, :]
+
+
+"""
+here:
+We see that a[:2] returns the first two rows with an implied : for the second dimension, as the following line shows. """
