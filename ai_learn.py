@@ -22,4 +22,20 @@ f[2, ...] = [[99, 99], [99, 99], [99, 99]]
 
 """
 here:
-We see that a[:2] returns the first two rows with an implied : for the second dimension, as the following line shows. """
+We see that a[:2] returns the first two rows with an implied : for the second dimension, as the following line shows.
+
+
+
+
+I may not be the strongest guy...but I've always been a whiz with numbers.
+
+make a pass at
+
+
+population-sample
+
+
+
+
+
+ """

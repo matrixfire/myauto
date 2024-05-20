@@ -138,6 +138,10 @@ def download_xkcd_comics():
 # download_xkcd_comics()
 
 
+
+browser.execute_script("alert('这是js弹窗代码')")
+
+
 '''
 https://blog.csdn.net/qq_43125235/article/details/125601564
 
@@ -359,3 +363,143 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
         con.finish()
+
+
+
+'''
+### Introduction
+The lecture so far has covered building simple web pages with HTML and CSS, using Git and GitHub for version control and collaboration, and creating web applications with Python and Django. Today, the focus is on JavaScript, a language that runs on the client side to make websites more interactive.
+
+### JavaScript Overview
+JavaScript enables running code on the client side, making websites interactive without server interaction. JavaScript code is included in HTML using `<script>` tags. A basic example displays an alert message to the user.
+
+### Event-Driven Programming
+JavaScript supports Event-Driven Programming, where events (like clicks or key presses) trigger code execution. An example is creating a button that displays an alert when clicked. JavaScript uses Event Listeners to handle these events.
+
+### Variables
+JavaScript uses `var`, `let`, and `const` to define variables:
+- `var`: defines a global variable.
+- `let`: defines a block-scoped variable.
+- `const`: defines a constant value.
+
+### DOM Manipulation
+JavaScript can manipulate HTML elements using `document.querySelector`. This function searches for elements and allows changing their properties, like `innerHTML`. Conditions in JavaScript use `===` for strict equality checking.
+
+### Improving Design
+JavaScript code can be separated into an external file for better organization, readability, and collaboration. This also allows multiple HTML files to share the same JavaScript code. External libraries, like Bootstrap, can be easily included.
+
+### Form Handling and Styling
+JavaScript can handle form submissions, extract input values, and manipulate styles. Example: changing the color of a heading based on button clicks using `dataset` attributes and `style` properties.
+
+### JavaScript Console
+The console is a debugging tool where small code snippets can be tested. `console.log` is used to print information to the console for debugging.
+
+### Arrow Functions
+Arrow functions provide a concise syntax for defining functions. Example: `(input) => { code }`. They are useful for simplifying code and are often used in event handling.
+
+### APIs and JSON
+JavaScript Objects are similar to Python dictionaries, storing key-value pairs. APIs (Application Programming Interfaces) allow communication between applications. Data from APIs is often in JSON (JavaScript Object Notation) format. Example: fetching exchange rates from an API using `fetch` and handling the response.
+
+### Currency Exchange Example
+A practical example involves creating an HTML form to input a currency and using JavaScript to fetch and display exchange rates from an API. The `fetch` function sends an HTTP request and processes the JSON response to update the page dynamically.
+
+### Local Storage
+Local Storage allows storing data in the user's browser for later use. It uses key-value pairs and functions like `localStorage.getItem(key)` and `localStorage.setItem(key, value)` to retrieve and store data.
+
+### Summary
+JavaScript enhances web pages by enabling client-side interactivity, event handling, and DOM manipulation. It supports variables, conditions, and functions like other programming languages. Using APIs and Local Storage, JavaScript can create dynamic and persistent web experiences. Separating JavaScript into external files improves organization and collaboration.
+
+
+
+
+
+
+
+
+
+
+JS
+1, Example: changing the color of a heading based on button clicks using `dataset` attributes and `style` properties.
+2, 
+    document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button').forEach(function(button) {
+        button.onclick = function() {
+            document.querySelector("#hello").style.color = button.dataset.color;
+        }
+    });
+    });
+
+3, 
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Send a GET request to the URL
+        fetch('https://api.exchangeratesapi.io/latest?base=USD')
+        // Put response into json form
+        .then(response => response.json())
+        .then(data => {
+            // Log data to the console
+            console.log(data);
+        });
+    });
+
+4, 
+    // Check if there is already a vlaue in local storage
+    if (!localStorage.getItem('counter')) {
+
+        // If not, set the counter to 0 in local storage
+        localStorage.setItem('counter', 0);
+    }
+
+
+    
+5, 
+
+
+**Example HTML:**
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style>
+            div { display: none; }
+        </style>
+        <script src="singlepage.js"></script>
+    </head>
+    <body>
+        <button data-page="page1">Page 1</button>
+        <button data-page="page2">Page 2</button>
+        <button data-page="page3">Page 3</button>
+        <div id="page1"><h1>This is page 1</h1></div>
+        <div id="page2"><h1>This is page 2</h1></div>
+        <div id="page3"><h1>This is page 3</h1></div>
+    </body>
+</html>
+```
+
+**Example JavaScript:**
+```javascript
+function showPage(page) {
+    document.querySelectorAll('div').forEach(div => {
+        div.style.display = 'none';
+    });
+    document.querySelector(`#${page}`).style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button').forEach(button => {
+        button.onclick = function() {
+            showPage(this.dataset.page);
+        }
+    });
+});
+```
+
+6, window.scrollTo(20,1000)
+window.open()
+window.onpopstate 
+history.pushState(stateObject, title, url);
+
+
+
+'''
