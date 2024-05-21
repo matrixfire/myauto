@@ -503,3 +503,16 @@ history.pushState(stateObject, title, url);
 
 
 '''
+
+
+
+import re
+
+ret = re.search(r"\d+", "A12")
+ret = re.findall(r"\d+", "A1, B2")
+ret = re.sub(r"\d+", "2", "A1")
+ret = re.sub(r"\d+", lambda x: str(int(x.group()) + 1),"A1")
+ret = re.split(r":| ", "A1:B2 C3")
+# ret.group()
+print(ret)
+

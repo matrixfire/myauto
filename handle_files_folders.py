@@ -416,7 +416,45 @@ def copy_first_images(input_path, output_folder):
 
 
 
+from PIL import Image
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import os
 
+def sort_key(filename):
+    # Split the filename by '_' and get the part after it, then remove the '.jpg' and convert to integer
+    return int(filename.split('_')[-1].split('.')[0])
+
+def jpg_to_pdf(folder_path, output_pdf):
+    # Get list of all jpg files in the folder
+    jpg_files = [f for f in os.listdir(folder_path) if f.endswith('.jpg') or f.endswith('.jpeg')]
+    jpg_files.sort()  # Ensure the files are in the correct order
+    jpg_files = sorted(jpg_files, key=sort_key)
+    
+    # Create a canvas object for the PDF
+    pdf = canvas.Canvas(output_pdf, pagesize=letter)
+    width, height = letter
+
+    for jpg_file in jpg_files:
+        img_path = os.path.join(folder_path, jpg_file)
+        img = Image.open(img_path)
+        img_width, img_height = img.size
+
+        # Calculate the scaling factor to fit the image on the PDF page
+        scale = min(width / img_width, height / img_height)
+        img_width *= scale
+        img_height *= scale
+
+        # Center the image on the page
+        x = (width - img_width) / 2
+        y = (height - img_height) / 2
+
+        # Draw the image on the PDF page
+        pdf.drawImage(img_path, x, y, img_width, img_height)
+        pdf.showPage()  # Add a new page for the next image
+
+    pdf.save()
+    print(f"PDF created successfully: {output_pdf}")
 
 
 

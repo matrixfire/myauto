@@ -48,24 +48,24 @@ def process_g():
     number_of_pages = pyip.inputInt(prompt="Enter pages: ", min=1)
 
     counter = 0
-
+    currentPageDataList = []
     while True:
         # try:
-        currentPageDataList = []
+        
 
         infoCard = driver.find_elements(by=By.CSS_SELECTOR, value='div.public-bottom-list-item')
         print('Total cards: ', len(infoCard))
-        for i in infoCard:
-            title = i.find_element(by=By.CSS_SELECTOR, value='a').text
-            title_url = i.find_element(by=By.CSS_SELECTOR, value='a').get_attribute('href')
-            innerInfoList = i.find_elements(by=By.CSS_SELECTOR, value='div.public-bottom-list-item-text>div')
+        for i, item in enumerate(infoCard):
+            title = item.find_element(by=By.CSS_SELECTOR, value='a').text
+            title_url = item.find_element(by=By.CSS_SELECTOR, value='a').get_attribute('href')
+            innerInfoList = item.find_elements(by=By.CSS_SELECTOR, value='div.public-bottom-list-item-text>div')
             cacheText = '%'
             cacheText += (title + '%')
             cacheText += (title_url + '%')
             for div in innerInfoList:
                 cacheText += (div.text + '%')
             currentPageDataList.append(cacheText)
-            print(cacheText)
+            print(f"{counter+1}-{i+1}\n{cacheText}\n\n")
         driver.execute_script('arguments[0].click()', driver.find_element(by=By.CSS_SELECTOR, value='button.btn-next'))
         time.sleep(random.random() * 17 + 2)
         print('Clicked!!')
@@ -76,6 +76,7 @@ def process_g():
     print('END')
     driver.close()
     # print(currentPageDataList[:2])
+    print(f"Total found: {len(currentPageDataList)}")
     return currentPageDataList
 
 
@@ -95,3 +96,25 @@ print(clean_lt, len(clean_lt))
 
 # print('\n'*10)
 # print(clean_lt[0])
+
+
+
+def generate_excel(data_list, file_name):
+    # Create a new Workbook and select the active sheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Iterate over each item in the list
+    for row_index, item in enumerate(data_list, start=1):
+        # Split the item by '%' and filter out empty strings
+        cell_values = [val for val in item.split('%') if val]
+        
+        # Iterate over each value and place it in the corresponding cell
+        for col_index, value in enumerate(cell_values, start=1):
+            ws.cell(row=row_index, column=col_index, value=value)
+
+    # Save the Workbook to the specified file
+    wb.save(file_name)
+
+file_name = "output.xlsx"
+generate_excel(clean_lt, file_name)    
