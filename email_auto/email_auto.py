@@ -463,8 +463,15 @@ def email_worker(sender_address, sender_password="", smtp_info=None):
 
     # 4.1 , set up the sender account
     # ec = EmailClient('smtp.qq.com', 465)
+    time.sleep(2)
     ec = EmailClient(smtp_info[0], smtp_info[1])
-    ec.connect_ssl()
+    try:
+        ec.connect_ssl()
+    except Exception as e:
+        print(e)
+        sys.exit(1)
+        
+    print("Connected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     if not sender_password:
         sender_password = pyip.inputPassword(f'Password for email({sender_address}): ')
@@ -549,7 +556,27 @@ if __name__ == '__main__':
     # email_worker('amazingtransition1@qq.com')
     # email_worker('mangocutting@163.com', smtp_info=('smtp.163.com', 465))
     # greet_user()
-    email_worker(pyip.inputEmail("Email Address: "), smtp_info=(pyip.inputStr("smtp server: "), pyip.inputInt("smtp serverport(default 465): ", default=465, blank=True)))
+    email_address = pyip.inputEmail("Email Address: ")
+    # Extract the domain name from the email address
+    domain = email_address.split('@')[1]
+
+    # Define the default SMTP server based on the domain
+    blank_value = False
+    if domain == 'qq.com':
+        default_smtp = 'smtp.qq.com'
+        blank_value = True
+    elif domain == '163.com':
+        default_smtp = 'smtp.163.com'
+        blank_value = True
+    else:
+        default_smtp = 'Enter SMTP server manually'
+
+    # Get the SMTP server from the user with the default value based on the domain
+    smtp_server = pyip.inputStr(f"smtp server [{default_smtp}]: ", default=default_smtp, blank=blank_value)
+
+
+
+    email_worker(email_address, smtp_info=(smtp_server, pyip.inputInt("smtp serverport(default 465): ", default=465, blank=True)))
 
 
 
