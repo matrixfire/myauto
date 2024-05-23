@@ -517,11 +517,39 @@ ret = re.split(r":| ", "A1:B2 C3")
 print(ret)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import requests
 import os
+
+def download_image(url, download_folder, idx):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            with open(os.path.join(download_folder, f'image_{idx}.webp'), 'wb') as file:
+                file.write(response.content)
+            print(f"Downloaded {url}")
+        else:
+            print(f"Failed to download {url}")
+    except Exception as e:
+        print(f"Error downloading {url}: {e}")
+
 
 def scrape_and_download_webp_images(url, download_folder='webp_images'):
     # Create download folder if it doesn't exist
@@ -539,33 +567,87 @@ def scrape_and_download_webp_images(url, download_folder='webp_images'):
         time.sleep(5)  # Adjust the sleep time if necessary
 
         # Scroll down to load more images (adjust the number of scrolls as needed)
-        for _ in range(5):
+        for _ in range(5):  # Can be changed
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)  # Adjust the sleep time if necessary
 
-        # Find all images with .webp extension
-        images = driver.find_elements(By.XPATH, "//img[contains(@src, '.webp')]")
+        # Find all images with 'webp' in the src attribute and not containing 'user'
+        images = driver.find_elements(By.XPATH, "//img[contains(@src, 'webp') and not(contains(@src, 'user'))]")
 
         # Get the src attribute of each image
         image_urls = [image.get_attribute('src') for image in images]
 
         # Download each image
         for idx, url in enumerate(image_urls):
-            try:
-                response = requests.get(url)
-                if response.status_code == 200:
-                    with open(os.path.join(download_folder, f'image_{idx}.webp'), 'wb') as file:
-                        file.write(response.content)
-                    print(f"Downloaded {url}")
-                else:
-                    print(f"Failed to download {url}")
-            except Exception as e:
-                print(f"Error downloading {url}: {e}")
+            print(url)
+            download_image(url, download_folder, idx)
 
     finally:
         # Close the browser
         driver.quit()
-
 # Example usage
 scrape_and_download_webp_images("https://ideas.lego.com/")
 
+
+# document.querySelector("#whats-up-app > div.whats-up-content > div.main-feed-container > div > div.feed-contents")
+# cards = driver.find_elements(By.CSS_SELECTOR, "#whats-up-app > div.whats-up-content > div.main-feed-container > div > div.feed-contents")
+
+
+cards_holder = driver.find_element(By.XPATH, '//*[@id="whats-up-app"]/div[2]/div[1]/div/div[2]')
+cards = cards_holder.find_elements(By.XPATH, '//*[@id="whats-up-app"]/div[2]/div[1]/div/div[2]/div') # .get_attribute('outerHTML')
+for i, card in enumerate(cards):
+    try:
+        img_element = card.find_element(By.XPATH, './/img[@data-test="card-image"]')
+    except:
+        continue
+    img_src = img_element.get_attribute('src')
+    img_alt = img_element.get_attribute('alt')..rstrip(" Image").strip().title()
+    print(img_src, img_alt, sep="\n", end="\n\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def scrape_and_download_webp_images_(url, download_folder='webp_images'):
+    # Create download folder if it doesn't exist
+    if not os.path.exists(download_folder):
+        os.makedirs(download_folder)
+
+    # Initialize the Firefox driver
+    driver = webdriver.Firefox()
+
+    try:
+        # Open the LEGO Ideas website
+        driver.get(url)
+
+        # Wait for the page to load completely
+        time.sleep(5)  # Adjust the sleep time if necessary
+
+        # Scroll down to load more images (adjust the number of scrolls as needed)
+        for _ in range(1):  # Can be changed
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)  # Adjust the sleep time if necessary
+
+        # Find all images with 'webp' in the src attribute and not containing 'user'
+        images = driver.find_elements(By.XPATH, "//img[contains(@src, 'webp') and not(contains(@src, 'user'))]")
+
+        # Get the src attribute of each image
+        image_urls = [image.get_attribute('src') for image in images]
+
+        # Download each image
+        for idx, url in enumerate(image_urls):
+            print(url)
+            download_image(url, download_folder, idx)
+
+    finally:
+        # Close the browser
+        driver.quit()
