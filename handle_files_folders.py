@@ -423,7 +423,8 @@ import os
 
 def sort_key(filename):
     # Split the filename by '_' and get the part after it, then remove the '.jpg' and convert to integer
-    return int(filename.split('_')[-1].split('.')[0])
+    # return int(filename.split('-')[-1].split('.')[0])
+    return int(filename.split('.')[0].split('(')[-1].rstrip(")"))
 
 def jpg_to_pdf(folder_path, output_pdf):
     # Get list of all jpg files in the folder
