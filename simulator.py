@@ -24,4 +24,32 @@ def simulate_monty_hall(n_simulations):
     print(f"If you change, you will win {switch_wins} times({(switch_wins / n_simulations) *100:.2f}%)")
     return switch_wins, stay_wins
 
-simulate_monty_hall(10000)
+# simulate_monty_hall(10000)
+
+def simulate_keep_baby_boy(famalies):
+    girls = 0
+    boys = 0
+    for _ in range(famalies):
+        if random.random() > 0.5:
+            boys += 1
+            print(f"Having a boy: {boys}")
+        else:
+            girls += 1
+            print(f"Having a girl: {girls}")
+            while True:
+                if random.random() > 0.5:
+                    boys += 1
+                    print(f"Having a boy: {boys}")
+                    break
+                else:
+                    girls += 1
+                    print(f"Having a girl: {girls}")
+    
+    print(f"Simulating {famalies} famalies:")
+    print(f"Girls: {girls} Boys: {boys}")
+    print(f"Boys rate: {(boys / (girls + boys)) * 100:.2f}%")
+    return girls, boys
+                    
+
+# simulate_keep_baby_boy(100)
+    
