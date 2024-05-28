@@ -61,3 +61,15 @@
 - **Enhancing the Blog**: Learn to create canonical and SEO-friendly URLs, implement pagination, build class-based views, and create forms for user interactions.
 
 By following these steps, you will gain a comprehensive understanding of building and managing a Django application, focusing on key concepts and best practices for web development.
+
+
+
+
+
+differnce in package, module, library and script in python
+
+py -m venv my_env
+py -m pip install Django~=5.0.4 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+django-admin startproject mysite
+

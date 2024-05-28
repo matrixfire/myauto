@@ -1,27 +1,20 @@
 import random
-import pyinputplus as pyip 
+import pyinputplus as pyip
+
 
 def simulate_monty_hall(n_simulations):
-    switch_wins = 0
+    switch_wins  =0
     stay_wins = 0
 
     for _ in range(n_simulations):
         prize_door = random.randint(0, 2)
+
         initial_choice = random.randint(0, 2)
 
-        remaining_doors = [d for d in range(3) if d != initial_choice and d != prize_door]
+        remaining_doors = [door for door in range(3) if door != initial_choice and door != prize_door]
         door_opened_by_host = random.choice(remaining_doors)
 
-        switch_choice = next(d for d in range(3) if d != initial_choice and d != door_opened_by_host)
+        switch_choice = next(d for d in range(3) for d != initial_choice and d != door_opened_by_host)
 
-        if initial_choice == prize_door:
-            stay_wins += 1
-        if switch_choice == prize_door:
-            switch_wins += 1
-    
-    print(f"Simulating {n_simulations} times:")
-    print(f"If you stay, you will win {stay_wins} times({(stay_wins / n_simulations) *100:.2f}%)")
-    print(f"If you change, you will win {switch_wins} times({(switch_wins / n_simulations) *100:.2f}%)")
-    return switch_wins, stay_wins
+        
 
-simulate_monty_hall(10000)

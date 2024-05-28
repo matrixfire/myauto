@@ -429,8 +429,8 @@ def sort_key(filename):
 def jpg_to_pdf(folder_path, output_pdf):
     # Get list of all jpg files in the folder
     jpg_files = [f for f in os.listdir(folder_path) if f.endswith('.jpg') or f.endswith('.jpeg')]
-    jpg_files.sort()  # Ensure the files are in the correct order
-    jpg_files = sorted(jpg_files, key=sort_key)
+    # jpg_files.sort()  # Ensure the files are in the correct order
+    # jpg_files = sorted(jpg_files, key=sort_key)
     
     # Create a canvas object for the PDF
     pdf = canvas.Canvas(output_pdf, pagesize=letter)
