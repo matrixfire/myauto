@@ -63,6 +63,8 @@
 By following these steps, you will gain a comprehensive understanding of building and managing a Django application, focusing on key concepts and best practices for web development.
 
 
+ASGI is like an express courier service that handles multiple packages (requests) simultaneously, compared to regular mail (WSGI) that handles one package at a time.
+
 
 
 

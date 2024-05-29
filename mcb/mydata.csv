@@ -21,7 +21,9 @@ cn,"pls translate below english text into chinese, keep each line or sentence of
 
 {{}}"
 t2,Similar 
-sum,Summarize the text below and give me a list of bullet points with key insights and the most important facts.
+sum,"Make a comprehensive summary from the below matrial so that it help me better grasp and learn it, you should try give me what's important from it, as in below:
+
+{{}}"
 analogy,Can you create an analogy for
 find_emails,"import re
 import pyperclip
@@ -32,7 +34,7 @@ emailRegex = re.compile(r'''(
     [a-zA-Z0-9._%+-]+   # username
     @ 
     [a-zA-Z0-9.-]+  # domain name
-    (\.[a-zA-Z]{2,4}) 
+    (\.[a-zA-Z]{2,3}) 
     )''', re.VERBOSE)
 
 
@@ -93,11 +95,242 @@ from PIL import Image
 def extract_text_from_image(image_path):
     # Open the image file
     img = Image.open(image_path)
+    gray_img = img.convert('L')
     # Specify the path to the Tesseract executable
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
     # Use pytesseract to extract text
-    text = pytesseract.image_to_string(img)
+    text = pytesseract.image_to_string(gray_img)
     return text
 
 ocr = extract_text_from_image
+
+def main(folder_path):
+    import os
+    import pyperclip as p
+    all_text = """"
+    g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files path names
+    def remove_empty_lines(text):
+        lines = text.split('\n')
+        non_empty_lines = filter(lambda line: line.strip(), lines)
+        return '\n'.join(non_empty_lines)
+    file_path_lt = g2(folder_path)
+    for file_path in file_path_lt:
+        all_text += (ocr(file_path) + '\n')
+        print(f""{file_path} extracted."")
+    result = remove_empty_lines(all_text)
+    p.copy(result)
+    print(result)"
+post2,"As is stated, Our company is a building block manufacturer in China with brand name ""Reobrix"" and we produces lego-like bricks, below excerpts is its model description, 
+I wanna you complete three tasks:
+TASK 1:
+you first make a sumamry first, 
+TASK2: 
+and then Based on the description, make some posts examples that I can use to promote it with the detail on my Social Networks (like FB, twitter, ins, youtube, tiktok, youtube etc)  including the approprate hash tags for building blocks(and I think keywords like construction toys and interlocking brick system would be good, and better think of five or more hashtags, and be sure to include #reobrix ,), and make sure you must including our website link https://reobrix.com/ in the post(dont forget that!)
+TASK3:
+think of two titles for this product, including Reobrix brand name in the begining, like ""Reobrix Supercar ...""...
+
+
+{{}}"
+tools,"import os
+f = lambda input_path: [folder for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs names
+f2 = lambda input_path: [folder for folder in os.listdir(input_path)] # dirs and files names
+
+g = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, folder))] # dirs paths
+g2 = lambda input_path: [os.path.join(input_path, folder) for folder in os.listdir(input_path)] # dirs and files path names"
+rename,"import os
+
+def rename_path(old_path, new_name, keep_filename_suffix=False):
+    try:
+        # Check if new_name is a path or just a name
+        if os.path.isabs(new_name):
+            new_path = new_name
+        else:
+            # Split the path into directory and base name
+            directory, base_name = os.path.split(old_path)
+            
+            if keep_filename_suffix:
+                # Keep the old filename's suffix
+                file_name, file_ext = os.path.splitext(base_name)
+                new_base_name = f""{new_name}{file_ext}""
+            else:
+                new_base_name = new_name
+            
+            new_path = os.path.join(directory, new_base_name)
+        
+        # Check if the new path already exists
+        if os.path.exists(new_path):
+            # If it does, find a new name by adding a counter in parentheses
+            counter = 1
+            while True:
+                new_base_name, new_ext = os.path.splitext(new_base_name)
+                new_base_name = f""{new_base_name}({counter}){new_ext}""
+                new_path = os.path.join(directory, new_base_name)
+                if not os.path.exists(new_path):
+                    break
+                counter += 1
+        
+        # Rename the path
+        os.rename(old_path, new_path)
+        
+        # Print the success message
+        print(f""Success in renaming {os.path.basename(old_path)} to {os.path.basename(new_path)}"")
+        print(f""Old path: {old_path}"")
+        print(f""New path: {new_path}"")
+    except FileNotFoundError:
+        print(""Error: File or directory not found"")
+    except Exception as e:
+        print(f""Error: {e}"")"
+web,"import os
+
+def get_unique_filename(path):
+    """"""
+    Generates a unique filename by appending an incrementing number
+    if the file already exists.
+    """"""
+    base, ext = os.path.splitext(path)
+    counter = 1
+    new_path = path
+    
+    while os.path.exists(new_path):
+        new_path = f""{base}-{counter}{ext}""
+        counter += 1
+    
+    return new_path
+
+def create_web_files(folder_path):
+    # Create the folder if it doesn't exist
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    
+    # Define the initial paths for the files
+    index_path = os.path.join(folder_path, 'index.html')
+    style_path = os.path.join(folder_path, 'style.css')
+    script_path = os.path.join(folder_path, 'script.js')
+    
+    # Get unique paths if files already exist
+    index_path = get_unique_filename(index_path)
+    style_path = get_unique_filename(style_path)
+    script_path = get_unique_filename(script_path)
+    
+    # Create index.html with basic structure
+    index_content = '''<!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Document</title>
+    <link rel=""stylesheet"" href=""style.css"">
+</head>
+<body>
+    <script src=""script.js""></script>
+</body>
+</html>'''
+    
+    with open(index_path, 'w') as file:
+        file.write(index_content)
+    
+    # Create empty style.css
+    with open(style_path, 'w') as file:
+        file.write('')
+
+    # Create empty script.js
+    with open(script_path, 'w') as file:
+        file.write('')
+
+# Alias the function for easier use
+web = create_web_files
+"
+easy2,"give me an analogy to help understand {{}}, and then give a professional definiton for it."
+re,"import re
+
+ret = re.search(r""\d+"", ""A12"")
+ret = re.findall(r""\d+"", ""A1, B2"")
+ret = re.sub(r""\d+"", ""2"", ""A1"")
+ret = re.sub(r""\d+"", lambda x: str(int(x.group()) + 1),""A1"")
+ret = re.split(r"":| "", ""A1:B2 C3"")"
+reply,"Note below in between """""" """""" (triple quotes) are the email or chat history I or we have with some sort of client, 
+
+
+""""""
+{{}}
+""""""
+
+Since English isn't my native, I want you to write message or email back to the recipient, expressing that:
+
+"
+reobrix2,"We are a company in China with brand name Reobrix, which is a leading building block manufacturer based in China, specializing in high-quality, LEGO-like bricks. Our innovative building sets are designed to inspire creativity and provide a unique building experience for enthusiasts of all ages. With a diverse range of product collections, including Block Gun Collection, Submarine Series, Military Aircraft Collection, Cars Collection, Power Engineering Series, and many more, we cater to a wide array of interests and hobbies.
+
+At Reobrix, we are dedicated to the construction and development of brand culture, creativity, and high standards of quality. Our products are sold in over 150 countries through various channels such as e-commerce, shopping malls, supermarkets, and specialty stores. We take pride in our detailed and realistic models, each crafted with precision and care, ensuring an engaging and rewarding assembly experience.
+
+Our latest offerings include highly detailed models like the Reobrix Cathedral of Notre Dame, UCS-Style Star Shuttle, and the Scorpion Submachine Gun, among others. These models not only provide an immersive building experience but also serve as magnificent display pieces.
+
+We frequently collaborate with influencers by providing free samples for them to create and share videos and pictures, helping to showcase our products to a broader audience. Our commitment to quality and innovation has earned us a loyal customer base and long-term partnerships with well-known brands.
+"
+moc,"My name is Bill and We are a company in China with brand name Reobrix, which is a leading building block manufacturer based in China, specializing in high-quality, LEGO-like bricks. Our innovative building sets are designed to inspire creativity and provide a unique building experience for enthusiasts of all ages. With a diverse range of product collections, including Block Gun Collection, Submarine Series, Military Aircraft Collection, Cars Collection, Power Engineering Series, and many more, we cater to a wide array of interests and hobbies.
+
+At Reobrix, we are dedicated to the construction and development of brand culture, creativity, and high standards of quality. Our products are sold in over 150 countries through various channels such as e-commerce, shopping malls, supermarkets, and specialty stores. We take pride in our detailed and realistic models, each crafted with precision and care, ensuring an engaging and rewarding assembly experience.
+
+Our latest offerings include highly detailed models like the Reobrix Cathedral of Notre Dame, UCS-Style Star Shuttle, and the Scorpion Submachine Gun, among others. These models not only provide an immersive building experience but also serve as magnificent display pieces.
+
+We frequently collaborate with influencers by providing free samples for them to create and share videos and pictures, helping to showcase our products to a broader audience. Our commitment to quality and innovation has earned us a loyal customer base and long-term partnerships with well-known brands.
+
+My Email Address: bill@reobrix.com , and company's Website: https://reobrix.com
+
+Above is our brief introduction, and now we are looking for MOC designers, and I happened to check a post as in below (within the triple quotes """""" """"""), and based on the post details write a concise mesage to him or her, expressing the idea of our willing to cooperate with MOC designers like him or her bying paying them, be sure to include our website url link(just showing the literal words for our site and don't user hyperlink) so they can check.
+
+
+""""""
+{{}}
+""""""
+You better make the message shorter than 100 words, as I think too long text will make them impatient to read."
+moc2,"We are about to plan to cooperate with some MOC designers, and now I'm look for some designers' work and report to my manager,
+below in """""" """"""(triple quotes) are the contents writen by some MOC designers, make me make a sumary, in below format, using Chinese, note in parenthis is what I want you to fill :
+MOC设计项目：(What the works is about)
+作者：(Its author)
+来源：(What platform or link does this work come from )
+作品简介：(About a brief intro based on the contents)
+
+For example:
+
+MOC设计项目：海盗单桅船:乌鸦号
+作者：Sebeus
+来源：https://www.eurobricks.com/forum/index.php?/forums/topic/198614-moc-pirate-sloop-the-raven/
+作品简介：这是一个海盗船的设计，作者大概花了三年。
+
+""""""{{}}""""""
+"
+django,"import os
+
+def setup_django_app(app_path):
+    # Extract app name from the path
+    app_name = os.path.basename(app_path)
+
+
+    urls_path = os.path.join(app_path, 'urls.py')
+    forms_path = os.path.join(app_path, 'forms.py')
+    templates_path = os.path.join(app_path, 'templates', app_name)
+    static_path = os.path.join(app_path, 'static', app_name)
+
+    if not os.path.exists(urls_path):
+        with open(urls_path, 'w') as urls_file:
+            urls_file.write(f""""""
+from django.urls import path
+from . import views
+
+app_name = '{app_name}'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    # Add other paths here
+]
+"""""")
+ 
+    if not os.path.exists(forms_path):
+        open(forms_path, 'a').close()
+
+    #  Create templates and static directories if they don't exist
+    for directory in (templates_path, static_path):
+        os.makedirs(directory, exist_ok=True)
+
+dj = setup_django_app
 "
