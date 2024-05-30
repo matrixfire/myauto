@@ -172,10 +172,26 @@ django-admin startproject mysite
 By understanding these key concepts and practices, you'll be well-equipped to build efficient and scalable back-end services using Node.js.
 
 
-
-
+----------------------
 from django.conf import settings
 from django.conf.urls.static import static
+
+from django.shortcuts import get_object_or_404
+
+def post_detail(request, id):
+    post = get_object_or_404(
+        Post,
+        id=id,
+        status=Post.Status.PUBLISHED
+    )
+    return render(
+        request,
+        'blog/post/detail.html',
+        {'post': post}
+    )
+
+
+{{ post.body|truncatewords:30|linebreaks }}
 
 from .models import Post
 
@@ -194,97 +210,57 @@ class PostAdmin(admin.ModelAdmin):
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-------------------------------------------------------------------------------------
-
->>> from django.contrib.auth.models import User
->>> from blog.models import Post
->>> user = User.objects.get(username='admin')
 
 
-1,  Creating objects -INSERT SQL statement
+from django.contrib.auth.models import User
+from blog.models import Post
+from django.db.models import Q
 
+# Retrieve the user with username 'admin'
+user = User.objects.get(username='admin')
 
-create the object and persist it to the database
->>> post = Post(title='Another post', slug='another-post', body='Post body.', author=user)
->>> post.save()
+# 1. Creating objects
+# Create a Post object with title 'A' and author 'user'
+post = Post(title='A', author=user) 
+post.save()  # Save the Post object to the database
 
->>> Post.objects.create(title='One more post',
-                    slug='one-more-post',
-                    body='Post body.',
-                    author=user)
-, fetch an object from the database or create it if it’s absent
+# Create a Post object with title 'B' and save it directly
+Post.objects.create(title='B')
+
+# Get or create a User object with username 'user2'
 user, created = User.objects.get_or_create(username='user2')
 
-2, Updating objects-UPDATE SQL statement.
->>> post.title = 'New title'
->>> post.save()
+# 2. Updating objects
+# Update the title of the post
+post.title = 'New title'
+post.save()  # Save the changes to the database
 
-3, Retrieving objects
+# 3. Retrieving objects
+# Retrieve the first 5 Post objects
+Post.objects.all()[:5]
 
->>> all_posts = Post.objects.all()
-4, Filtering objects
+# Retrieve a random Post object
+Post.objects.order_by('?')[0]
 
- Post.objects.filter(title='Who was Django Reinhardt?')
+# Retrieve all Post objects ordered by author (ascending) and title (descending)
+Post.objects.order_by('author', '-title')
 
+# 4. Deleting objects
+# Retrieve the Post object with id 1 and delete it
+post = Post.objects.get(id=1)
+post.delete()
 
-5, Using field lookups
->>> Post.objects.filter(id__exact=1)
->>> Post.objects.filter(id=1)
+# 5. Advanced Queries
+# Check if any Post objects exist that were published after January 1, 2024,
+# have an author with username 'admin', and do not have a title starting with 'Why'
+Post.objects.filter(publish__date__gt=date(2024, 1, 1)) \
+    .filter(author__username='admin') \
+    .exclude(title__startswith='Why') \
+    .exists()
 
->>> Post.objects.filter(title__iexact='who was django reinhardt?')
->>> Post.objects.filter(title__contains='Django')
->>> Post.objects.filter(title__icontains='django')
->>> Post.objects.filter(id__in=[1, 3])
->>> Post.objects.filter(id__gt=3)
->>> Post.objects.filter(id__gte=3)
->>> Post.objects.filter(title__istartswith='who')
->>> Post.objects.filter(publish__date__gt=date(2024, 1, 1))
->>> Post.objects.filter(author__username__starstwith='ad')
+# Create Q objects for titles starting with 'who' or 'why'
+starts_who = Q(title__istartswith='who')
+starts_why = Q(title__istartswith='why')
 
-6, Chaining filters
-
->>> Post.objects.filter(publish__year=2024) \
->>>             .filter(author__username='admin')
-
-7, Excluding objects
->>> Post.objects.filter(publish__year=2024) \
->>>             .exclude(title__startswith='Why')
-
-8, Ordering objects
-
->>> Post.objects.order_by('author', '-title')
->>> Post.objects.order_by('?')
-
-9, Limiting QuerySets
->>> Post.objects.all()[:5]
->>> Post.objects.all()[3:6]
->>> Post.objects.order_by('?')[0]
-
-
-10, Counting objects
->>> Post.objects.filter(id_lt=3).count()
-
-
-11, Checking if an object exists
-
-Post.objects.filter(title__startswith='Why').exists()
-
-
-12, Deleting objects
-
->>> post = Post.objects.get(id=1)
->>> post.delete()
-
-13, Complex lookups with Q objects
-
->>> from django.db.models import Q
->>> starts_who = Q(title__istartswith='who')
->>> starts_why = Q(title__istartswith='why')
->>> Post.objects.filter(starts_who | starts_why)
-
-
-
-
-
-
-
+# Count the number of Post objects with titles starting with 'who' or 'why'
+Post.objects.filter(starts_who | starts_why).count()
