@@ -95,6 +95,59 @@ modify_image_references_from_clipboard1(some_function("core/"))
 modify_image_references_from_clipboard2(some_function("core:"))
 
 
+import pyperclip
+import re
+
+def add_prefix_to_classes(html, prefix):
+    # Regular expression to find all class attributes
+    class_pattern = re.compile(r'class="([^"]*)"')
+
+    def repl(match):
+        # Extract the class names
+        classes = match.group(1)
+        # Split the class names into a list
+        class_list = classes.split()
+        # Add the prefix to each class name
+        prefixed_classes = [prefix + class_name for class_name in class_list]
+        # Join the class names back into a single string
+        return f'class="{" ".join(prefixed_classes)}"'
+
+    # Substitute all class attributes in the HTML with the prefixed class names
+    modified_html = class_pattern.sub(repl, html)
+    return modified_html
+
+# Read HTML from the clipboard
+html = pyperclip.paste()
+
+# Define the prefix
+prefix = "prefix-"
+
+# Add the prefix to all class names
+modified_html = add_prefix_to_classes(html, prefix)
+
+# Write the modified HTML back to the clipboard
+pyperclip.copy(modified_html)
+
+print("The HTML code with prefixed class names has been copied to the clipboard.")
+
+
+
+def find_classes_from_clipboard():
+    # Regular expression to find all class attributes
+    import pyperclip as p
+    class_pattern = re.compile(r'class="([^"]*)"')
+    html = p.paste()
+    class_list = class_pattern.findall(html)
+    # print(class_list)
+    class_list_final = []
+    for i in class_list:
+        sub_lt = i.split(" ")
+        for slt in sub_lt:
+            if slt not in class_list_final:
+                class_list_final.append(slt)
+    print(class_list_final)
+    for i in class_list_final:
+        print(i)
 
 
 
@@ -117,3 +170,4 @@ class PostAdmin(admin.ModelAdmin):
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

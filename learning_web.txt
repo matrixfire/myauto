@@ -75,3 +75,216 @@ py -m pip install Django~=5.0.4 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 django-admin startproject mysite
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Comprehensive Summary of Node.js Basics
+
+#### What is Node.js?
+- **Node.js** is an open-source, cross-platform runtime environment for executing JavaScript code outside of a browser.
+- **Common Use**: Building back-end services (APIs) that power web and mobile applications.
+- **Benefits**:
+  - Ideal for highly scalable, data-intensive, and real-time back-end services.
+  - Easy to get started for prototyping and agile development.
+  - Used by large companies like PayPal, Uber, Netflix, and Walmart.
+
+#### Why Use Node.js?
+1. **Efficiency**: Node applications are built faster with fewer people and fewer lines of code compared to traditional Java or Spring-based applications.
+2. **Performance**: Node can handle more requests per second and has lower average response times.
+3. **Skill Reusability**: Front-end developers familiar with JavaScript can transition to full-stack development.
+4. **Code Consistency**: Using JavaScript for both front-end and back-end leads to cleaner and more consistent code.
+5. **Ecosystem**: Node has the largest ecosystem of open-source libraries.
+
+#### Node.js Runtime Environment
+- Node uses the **V8 JavaScript engine** from Chrome to execute JavaScript code outside the browser.
+- **Environment Objects**: Instead of browser-specific objects (like `window` or `document`), Node provides objects for file systems, networking, etc.
+
+#### Node.js Architecture
+- **Asynchronous, Non-blocking I/O**:
+  - Single-threaded model using event-driven architecture.
+  - Handles multiple requests efficiently without waiting for one to complete before starting another.
+
+#### Installing Node.js
+- **Check Version**: `node --version`
+- **Install Latest Version**: Download from nodejs.org and install the recommended version.
+
+#### First Node Application
+- **Create a JavaScript file** and write a simple function.
+- **Run the application** using `node app.js`.
+
+#### Module System in Node.js
+- **Modules**: Encapsulate code within a file.
+  - Variables and functions are scoped to the module and are not globally available.
+  - Use `module.exports` to export functions or objects.
+  - Use `require` to import modules.
+
+#### Built-in Node.js Modules
+1. **HTTP Module**: Used to create a web server.
+   - **Create Server**: `http.createServer((req, res) => { ... }).listen(3000);`
+   - **Handle Requests**: Check `req.url` and send responses using `res.write()` and `res.end()`.
+2. **File System Module**: Interact with the file system.
+   - **Read Directory**: `fs.readdir()` to list files in a directory.
+   - **Asynchronous Methods**: Prefer non-blocking methods to maintain performance.
+3. **Events Module**: Work with event-driven programming.
+   - **EventEmitter Class**: Create and handle custom events.
+
+#### Practical Examples
+1. **Creating a Simple Web Server**:
+   - Use the HTTP module to listen for requests on a specific port.
+   - Respond to different routes (e.g., `/`, `/api/courses`) with specific content.
+2. **Working with the File System**:
+   - Use `fs.readdir()` to read the contents of a directory and handle the results asynchronously.
+3. **Handling Events**:
+   - Use the `EventEmitter` class to create custom events and listeners.
+   - Raise events using `emit` and handle them with `on`.
+
+### Summary of Advanced Concepts
+1. **Error Handling**: Properly handle errors in asynchronous operations.
+2. **Asynchronous JavaScript**: Master callbacks, promises, and async/await for handling asynchronous operations.
+3. **Express Framework**: Use Express to structure and manage routes cleanly in a Node.js application.
+4. **Database Integration**: Implement CRUD operations and data validation using databases like MongoDB.
+5. **Security Practices**: Implement authentication and authorization using JSON Web Tokens (JWT).
+6. **Testing**: Perform unit and integration testing to ensure code reliability.
+7. **Deployment**: Deploy Node.js applications to the cloud for production use.
+
+By understanding these key concepts and practices, you'll be well-equipped to build efficient and scalable back-end services using Node.js.
+
+
+
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+from .models import Post
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'slug', 'author', 'publish', 'status']
+    list_filter = ['status', 'created', 'publish', 'author']
+    search_fields = ['title', 'body']
+    prepopulated_fields = {'slug': ('title',)}
+    raw_id_fields = ['author']
+    date_hierarchy = 'publish'
+    ordering = ['status', 'publish']
+    show_facets = admin.ShowFacets.ALWAYS
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+------------------------------------------------------------------------------------
+
+>>> from django.contrib.auth.models import User
+>>> from blog.models import Post
+>>> user = User.objects.get(username='admin')
+
+
+1,  Creating objects -INSERT SQL statement
+
+
+create the object and persist it to the database
+>>> post = Post(title='Another post', slug='another-post', body='Post body.', author=user)
+>>> post.save()
+
+>>> Post.objects.create(title='One more post',
+                    slug='one-more-post',
+                    body='Post body.',
+                    author=user)
+, fetch an object from the database or create it if it’s absent
+user, created = User.objects.get_or_create(username='user2')
+
+2, Updating objects-UPDATE SQL statement.
+>>> post.title = 'New title'
+>>> post.save()
+
+3, Retrieving objects
+
+>>> all_posts = Post.objects.all()
+4, Filtering objects
+
+ Post.objects.filter(title='Who was Django Reinhardt?')
+
+
+5, Using field lookups
+>>> Post.objects.filter(id__exact=1)
+>>> Post.objects.filter(id=1)
+
+>>> Post.objects.filter(title__iexact='who was django reinhardt?')
+>>> Post.objects.filter(title__contains='Django')
+>>> Post.objects.filter(title__icontains='django')
+>>> Post.objects.filter(id__in=[1, 3])
+>>> Post.objects.filter(id__gt=3)
+>>> Post.objects.filter(id__gte=3)
+>>> Post.objects.filter(title__istartswith='who')
+>>> Post.objects.filter(publish__date__gt=date(2024, 1, 1))
+>>> Post.objects.filter(author__username__starstwith='ad')
+
+6, Chaining filters
+
+>>> Post.objects.filter(publish__year=2024) \
+>>>             .filter(author__username='admin')
+
+7, Excluding objects
+>>> Post.objects.filter(publish__year=2024) \
+>>>             .exclude(title__startswith='Why')
+
+8, Ordering objects
+
+>>> Post.objects.order_by('author', '-title')
+>>> Post.objects.order_by('?')
+
+9, Limiting QuerySets
+>>> Post.objects.all()[:5]
+>>> Post.objects.all()[3:6]
+>>> Post.objects.order_by('?')[0]
+
+
+10, Counting objects
+>>> Post.objects.filter(id_lt=3).count()
+
+
+11, Checking if an object exists
+
+Post.objects.filter(title__startswith='Why').exists()
+
+
+12, Deleting objects
+
+>>> post = Post.objects.get(id=1)
+>>> post.delete()
+
+13, Complex lookups with Q objects
+
+>>> from django.db.models import Q
+>>> starts_who = Q(title__istartswith='who')
+>>> starts_why = Q(title__istartswith='why')
+>>> Post.objects.filter(starts_who | starts_why)
+
+
+
+
+
+
+
