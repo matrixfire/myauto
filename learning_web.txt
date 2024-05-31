@@ -171,96 +171,68 @@ django-admin startproject mysite
 
 By understanding these key concepts and practices, you'll be well-equipped to build efficient and scalable back-end services using Node.js.
 
+---------------------------------------------
 
-----------------------
-from django.conf import settings
-from django.conf.urls.static import static
+### Enhancing Your Blog and Adding Social Features
 
-from django.shortcuts import get_object_or_404
+In this chapter, we will expand our Django blog application by adding several key functionalities common to many blogging platforms today. This includes canonical URLs, SEO-friendly URLs, pagination, class-based views, email functionalities, and a comment system. Here's a summary of the essential components covered:
 
-def post_detail(request, id):
-    post = get_object_or_404(
-        Post,
-        id=id,
-        status=Post.Status.PUBLISHED
-    )
-    return render(
-        request,
-        'blog/post/detail.html',
-        {'post': post}
-    )
+#### Canonical URLs for Models
+- **Purpose:** Avoid content duplication by specifying a master URL for resources.
+- **Implementation:** Add `get_absolute_url()` method in models using Django's `reverse()` function to dynamically build URLs.
+- **Code Changes:** Update `models.py` for the `Post` model and modify templates to use the new canonical URLs.
 
+#### SEO-Friendly URLs for Posts
+- **Goal:** Improve SEO by incorporating post publish dates and slugs into URLs.
+- **Steps:**
+  - Ensure unique slugs for each publication date using `unique_for_date`.
+  - Update URL patterns in `urls.py` to use the new format.
+  - Modify `views.py` to handle the new URL parameters.
+  - Adjust `get_absolute_url()` in the `Post` model accordingly.
 
-{{ post.body|truncatewords:30|linebreaks }}
+#### Adding Pagination to the Post List View
+- **Purpose:** Split long lists of posts into multiple pages.
+- **Django's Pagination Class:** Used to manage paginated data.
+- **Implementation:**
+  - Modify `views.py` to include the `Paginator` class.
+  - Create a generic pagination template and include it in the post list template.
+  - Handle pagination errors (e.g., non-integer page numbers).
 
-from .models import Post
+#### Building Class-Based Views
+- **Advantages:** Organizes code related to HTTP methods, allows multiple inheritance.
+- **Example:** Convert `post_list` view to `PostListView` using Django's `ListView`.
+- **Code Changes:** Update `views.py` and `urls.py`, adjust templates to accommodate class-based views.
 
+#### Sending Emails with Django
+- **Goal:** Allow users to share posts via email.
+- **Steps:**
+  - Create a form (`EmailPostForm`) for sharing posts.
+  - Add a view (`post_share`) to handle form submissions and send emails.
+  - Configure email settings using environment variables and `python-decouple`.
+  - Modify `urls.py` to include the new view.
+  - Create a template (`share.html`) for the form and success message.
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'author', 'publish', 'status']
-    list_filter = ['status', 'created', 'publish', 'author']
-    search_fields = ['title', 'body']
-    prepopulated_fields = {'slug': ('title',)}
-    raw_id_fields = ['author']
-    date_hierarchy = 'publish'
-    ordering = ['status', 'publish']
-    show_facets = admin.ShowFacets.ALWAYS
+#### Creating a Comment System
+- **Purpose:** Enable users to comment on blog posts.
+- **Components:**
+  - **Model:** Define a `Comment` model linked to `Post`.
+  - **Form:** Create a `CommentForm` from the `Comment` model.
+  - **Views:** 
+    - Update `post_detail` view to display comments and the comment form.
+    - Add a new view (`post_comment`) to handle comment submissions.
+  - **Templates:** 
+    - Include a comment form template (`comment_form.html`).
+    - Update the post detail template to display comments and the comment form.
+  - **Admin Interface:** Register the `Comment` model to manage comments via the Django admin site.
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#### Summary
+By the end of this chapter, you should be able to:
+- Define and use canonical URLs for better content management.
+- Create SEO-friendly URLs to improve search engine indexing.
+- Implement pagination to enhance user navigation through posts.
+- Use class-based views for cleaner and more maintainable code.
+- Allow users to share blog posts via email.
+- Add a comment system to engage users and facilitate discussions.
 
+In the next chapter, we will introduce a tagging system for the blog, build complex QuerySets for object retrieval by similarity, create custom template tags and filters, build a custom sitemap and feed, and implement full-text search functionality.
 
-
-from django.contrib.auth.models import User
-from blog.models import Post
-from django.db.models import Q
-
-# Retrieve the user with username 'admin'
-user = User.objects.get(username='admin')
-
-# 1. Creating objects
-# Create a Post object with title 'A' and author 'user'
-post = Post(title='A', author=user) 
-post.save()  # Save the Post object to the database
-
-# Create a Post object with title 'B' and save it directly
-Post.objects.create(title='B')
-
-# Get or create a User object with username 'user2'
-user, created = User.objects.get_or_create(username='user2')
-
-# 2. Updating objects
-# Update the title of the post
-post.title = 'New title'
-post.save()  # Save the changes to the database
-
-# 3. Retrieving objects
-# Retrieve the first 5 Post objects
-Post.objects.all()[:5]
-
-# Retrieve a random Post object
-Post.objects.order_by('?')[0]
-
-# Retrieve all Post objects ordered by author (ascending) and title (descending)
-Post.objects.order_by('author', '-title')
-
-# 4. Deleting objects
-# Retrieve the Post object with id 1 and delete it
-post = Post.objects.get(id=1)
-post.delete()
-
-# 5. Advanced Queries
-# Check if any Post objects exist that were published after January 1, 2024,
-# have an author with username 'admin', and do not have a title starting with 'Why'
-Post.objects.filter(publish__date__gt=date(2024, 1, 1)) \
-    .filter(author__username='admin') \
-    .exclude(title__startswith='Why') \
-    .exists()
-
-# Create Q objects for titles starting with 'who' or 'why'
-starts_who = Q(title__istartswith='who')
-starts_why = Q(title__istartswith='why')
-
-# Count the number of Post objects with titles starting with 'who' or 'why'
-Post.objects.filter(starts_who | starts_why).count()
