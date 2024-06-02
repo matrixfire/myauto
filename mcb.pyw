@@ -35,40 +35,95 @@ def import_from_csv(filename):
         for row in reader:
             my_shelf[row['key']] = row['value']
 
+# Function to display help information
+def display_help():
+    help_text = """
+    Multi-Clipboard Script Usage:
+    -----------------------------
+    save <keyword> [-m "message"] : Save the current clipboard content under the specified keyword.
+                                    Optionally, add a brief usage message.
+    delete <keyword>              : Delete the content associated with the specified keyword.
+    delete                        : Prompt for keyword if not specified.
+    list                          : List all saved key-value pairs and copy them to the clipboard.
+    list -k                       : List all saved keys one per line and copy them to the clipboard.
+    export <filename.csv>         : Export all saved data to the specified CSV file (default: mydata.csv).
+    import <filename.csv>         : Import data from the specified CSV file (default: mydata.csv).
+    flush                         : Clear all data from the shelve database.
+    <keyword>                     : Retrieve the content associated with the specified keyword and copy it to the clipboard.
+    help                          : Display this help information and copy it to the clipboard.
+    """
+    print(help_text)
+    pyperclip.copy(help_text)
+
 # Get the length of the command line arguments
 arg_len = len(sys.argv)
 
+# Process command-line arguments
 if arg_len >= 2:
     action = sys.argv[1].lower()
-    if action == 'save' and arg_len == 3:
-        keyword = sys.argv[2]
-        my_shelf[keyword] = pyperclip.paste()
+    if action == 'save':
+        if arg_len >= 3:
+            keyword = sys.argv[2]
+            value = pyperclip.paste()
+            if arg_len >= 5 and sys.argv[3] == '-m':
+                # Append the message to the value
+                message = sys.argv[4]
+                value += f"\n***Bill Super Clipboard-{message}***"
+            my_shelf[keyword] = value
+        else:
+            print("Keyword not specified.")
     elif action == 'delete':
+        # Delete a specific keyword from the shelve database
         keyword = sys.argv[2] if arg_len == 3 else None
         if keyword and keyword in my_shelf:
-            del my_shelf[keyword]  # Delete specific keyword.
+            del my_shelf[keyword]
         elif not keyword:
             print("Keyword for deletion not specified.")
     elif action == 'list':
-        formatted_list = f"\n**********\n".join(f"{key}: {my_shelf[key]}" for key in my_shelf.keys())
-        pyperclip.copy(formatted_list)
+        if arg_len == 3 and sys.argv[2] == '-k':
+            # List all keys one per line and copy to clipboard
+            print("List all keys one per line and copy to clipboard")
+            formatted_keys = "\n".join(
+                f"{key}: {my_shelf[key].split('***Bill Super Clipboard-')[-1].rstrip('***')}" if '***Bill Super Clipboard-' in my_shelf[key] else key
+                for key in my_shelf.keys()
+            )
+            pyperclip.copy(formatted_keys)
+            print(formatted_keys)
+        else:
+            # List all key-value pairs and copy to clipboard
+            print("List all key-value pairs and copy to clipboard")
+            formatted_list = f"\n**********\n".join(f"{key}: {my_shelf[key]}" for key in my_shelf.keys())
+            pyperclip.copy(formatted_list)
+            print(formatted_list)
     elif action == 'export':
+        # Export the shelve database to a CSV file
+        print("Export the shelve database to a CSV file")
         filename = sys.argv[2] if arg_len == 3 else 'mydata.csv'
         export_to_csv(filename)
     elif action == 'import':
+        # Import data from a CSV file into the shelve database
+        print("Import data from a CSV file into the shelve database")
         filename = sys.argv[2] if arg_len == 3 else 'mydata.csv'
         import_from_csv(filename)
     elif action == 'flush':
-        # Clear the shelve, deleting all keywords
+        # Clear all data from the shelve database
+        print("Clear all data from the shelve database")
         my_shelf.clear()
         print("All data cleared from the shelve.")
+    elif action == 'help':
+        # Display help information and copy it to the clipboard
+        display_help()
     else:
+        # Retrieve and paste a value from the shelve database by keyword
         if action in my_shelf:
             content = my_shelf[action]
-            # Check if content has curly braces and replace the content within them
+            # Replace any content within curly braces {{}} with the current clipboard content
             if '{{' in content and '}}' in content:
                 content_to_paste = pyperclip.paste()
                 content = content.replace(content[content.find('{{'):content.find('}}')+len('}}')], content_to_paste)
+            # Remove the brief usage message before copying to clipboard
+            if "***Bill Super Clipboard-" in content:
+                content = content.split("\n***Bill Super Clipboard-")[0]
             pyperclip.copy(content.strip().strip("\""))
 
 # Always close the shelve file
