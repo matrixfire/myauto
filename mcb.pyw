@@ -4,6 +4,7 @@ import sys
 import csv
 import os
 import lorem
+import datetime
 
 # Determine the directory of the script
 script_dir = os.path.dirname(__file__)
@@ -51,8 +52,10 @@ def display_help():
     -import <filename.csv>         : Import data from the specified CSV file (default: mydata.csv).
     -flush                         : Clear all data from the shelve database.
     <keyword>                      : Retrieve the content associated with the specified keyword and copy it to the clipboard.
-    -lorem1                        : lorem sentence   
-    -lorem2                        : lorem paragraph
+    -lorem1                        : Copy a lorem ipsum sentence to the clipboard.
+    -lorem2                        : Copy a lorem ipsum paragraph to the clipboard.
+    -git ["message"]               : Generate and copy Git commands to the clipboard.
+                                     If no message is provided, use the current date as the commit message.
     -help                          : Display this help information and copy it to the clipboard.
     """
     print(help_text)
@@ -119,7 +122,15 @@ if arg_len >= 2:
     elif action == '-lorem1':
         pyperclip.copy(lorem.sentence().title())
     elif action == '-lorem2':
-        pyperclip.copy(lorem.paragraph())        
+        pyperclip.copy(lorem.paragraph())
+    elif action == '-git':
+        if arg_len == 3:
+            message = sys.argv[2].strip('"')
+        else:
+            message = datetime.datetime.now().strftime("%B %d, %Y, %I:%M %p")
+        git_commands = f'git add .\ngit commit -m "{message}"\ngit push'
+        pyperclip.copy(git_commands)
+        print(git_commands)
     else:
         # Retrieve and paste a value from the shelve database by keyword
         if action in my_shelf:
