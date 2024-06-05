@@ -19,25 +19,6 @@ def simulate_monty_hall(n_simulations):
         
 
 
-#  THIS ONE IS GOOD!!!!
-import pyperclip
-import re
-
-def extract_image_references_from_clipboard():
-    # Get HTML content from the clipboard
-    html_content = pyperclip.paste()
-
-    # Define a regex pattern to match image URLs in any attribute
-    pattern = r'[\w-]+="([^"]+\.(?:jpg|jpeg|png|gif|ico|svg|bmp))"'
-
-    # Find all matches for the pattern
-    matches = re.findall(pattern, html_content, re.IGNORECASE)
-
-    # Print the extracted image references
-    print("Extracted image references:")
-    for img in matches:
-        print(img)
-
 
 
 def modify_image_references_from_clipboard1(modify_func):

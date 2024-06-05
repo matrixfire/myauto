@@ -22,7 +22,7 @@ Feel free to explore Desphixs' channel for more valuable content! 😊🚀
 
 
 
-docker run --name=blog_db -e POSRGRES_DB=blog -e POSTGRES_USER=blog -e POSTGRES_PASSWORD=xxxxx -p 5432:5432 -d postgres:16.2
+docker run --name=blog_db -e POSRGRES_DB=blog -e POSTGRES_USER=blog -e POSTGRES_PASSWORD=12345 -p 5432:5432 -d postgres:16.2
 
 
 
