@@ -1,205 +1,59 @@
-### Summary of Building a Blog Application with Django
-
-**Overview:**
-- This material guides you through building a professional-grade web application using Django, focusing on a blog application as a case study. It covers the essential components of a Django project, including models, templates, views, URLs, and the Django request/response cycle.
-
-**Key Topics:**
-1. **Setting Up Django:**
-   - **Installing Python**: Ensure you have Python 3.10, 3.11, or 3.12.
-   - **Creating a Virtual Environment**: Use `venv` to create an isolated Python environment.
-   - **Installing Django**: Install Django using `pip`.
-
-2. **Django Basics:**
-   - **Project vs. Application**: Understand the difference; a project is a Django installation with settings, while an application is a group of models, views, and templates.
-   - **Components**: Models (data structure), Templates (presentation layer), Views (logic to handle requests), URLs (routing).
-
-3. **Creating a Blog Application:**
-   - **Starting a Project**: Use `django-admin startproject mysite`.
-   - **Creating an Application**: Use `python manage.py startapp blog`.
-
-4. **Database and Models:**
-   - **Designing Models**: Define data models using Django’s ORM. Example: `Post` model with fields like `title`, `slug`, `body`, `publish`, `created`, `updated`, and `status`.
-   - **Migrations**: Use `makemigrations` and `migrate` to create and apply database schema changes.
-
-5. **Administration Interface:**
-   - **Superuser Creation**: Use `createsuperuser` to manage the admin site.
-   - **Register Models**: Register models in `admin.py` to manage them through Django’s admin interface.
-   - **Customization**: Customize how models are displayed using `ModelAdmin` options like `list_display`, `list_filter`, `search_fields`, and `prepopulated_fields`.
-
-6. **Views and URL Configuration:**
-   - **Creating Views**: Define views to handle requests and return responses. Example: `post_list` and `post_detail` views.
-   - **URL Patterns**: Map URLs to views using `path` and `include` in `urls.py`.
-
-7. **Templates:**
-   - **Base Template**: Create a base template to define the structure of your HTML pages.
-   - **Post List and Detail Templates**: Use the Django template language to render lists and details of blog posts.
-
-8. **QuerySets and Managers:**
-   - **QuerySets**: Use Django’s ORM to query the database. Methods include `all()`, `filter()`, `get()`, `exclude()`, and `order_by()`.
-   - **Custom Managers**: Define custom managers to add additional query methods.
-
-9. **Django’s Request/Response Cycle:**
-   - **Processing Requests**: Understand how Django processes HTTP requests and generates responses through URL patterns, views, and templates.
-
-10. **Management Commands:**
-    - Commonly used commands include `startproject`, `startapp`, `migrate`, `makemigrations`, `runserver`, `shell`, and `createsuperuser`.
-
-### Important Points:
-
-- **Installation and Setup**: Properly set up Python, virtual environments, and Django.
-- **Django Project Structure**: Understand the file structure and purpose of each file.
-- **Database Management**: Design models, apply migrations, and manage the database schema.
-- **Admin Interface**: Utilize Django’s built-in admin interface for managing application data.
-- **Views and Templates**: Create views and templates to render data and handle user interactions.
-- **URL Routing**: Set up URL patterns to map requests to views.
-- **QuerySets and ORM**: Efficiently query the database using Django’s ORM.
-- **Customization**: Customize the admin interface and templates to suit your application’s needs.
-- **Request/Response Cycle**: Understand the flow of handling requests and generating responses in Django.
-
-### Next Steps:
-
-- **Enhancing the Blog**: Learn to create canonical and SEO-friendly URLs, implement pagination, build class-based views, and create forms for user interactions.
-
-By following these steps, you will gain a comprehensive understanding of building and managing a Django application, focusing on key concepts and best practices for web development.
+django-admin startproject PROJECT_NAME
+cd PROJECT_NAME
+python manage.py startapp APP_NAME
 
 
-ASGI is like an express courier service that handles multiple packages (requests) simultaneously, compared to regular mail (WSGI) that handles one package at a time.
-
-
-
-
-differnce in package, module, library and script in python
-
-py -m venv my_env
-py -m pip install Django~=5.0.4 -i https://pypi.tuna.tsinghua.edu.cn/simple
-
-django-admin startproject mysite
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Comprehensive Summary of Node.js Basics
-
-#### What is Node.js?
-- **Node.js** is an open-source, cross-platform runtime environment for executing JavaScript code outside of a browser.
-- **Common Use**: Building back-end services (APIs) that power web and mobile applications.
-- **Benefits**:
-  - Ideal for highly scalable, data-intensive, and real-time back-end services.
-  - Easy to get started for prototyping and agile development.
-  - Used by large companies like PayPal, Uber, Netflix, and Walmart.
-
-#### Why Use Node.js?
-1. **Efficiency**: Node applications are built faster with fewer people and fewer lines of code compared to traditional Java or Spring-based applications.
-2. **Performance**: Node can handle more requests per second and has lower average response times.
-3. **Skill Reusability**: Front-end developers familiar with JavaScript can transition to full-stack development.
-4. **Code Consistency**: Using JavaScript for both front-end and back-end leads to cleaner and more consistent code.
-5. **Ecosystem**: Node has the largest ecosystem of open-source libraries.
-
-#### Node.js Runtime Environment
-- Node uses the **V8 JavaScript engine** from Chrome to execute JavaScript code outside the browser.
-- **Environment Objects**: Instead of browser-specific objects (like `window` or `document`), Node provides objects for file systems, networking, etc.
-
-#### Node.js Architecture
-- **Asynchronous, Non-blocking I/O**:
-  - Single-threaded model using event-driven architecture.
-  - Handles multiple requests efficiently without waiting for one to complete before starting another.
-
-#### Installing Node.js
-- **Check Version**: `node --version`
-- **Install Latest Version**: Download from nodejs.org and install the recommended version.
-
-#### First Node Application
-- **Create a JavaScript file** and write a simple function.
-- **Run the application** using `node app.js`.
-
-#### Module System in Node.js
-- **Modules**: Encapsulate code within a file.
-  - Variables and functions are scoped to the module and are not globally available.
-  - Use `module.exports` to export functions or objects.
-  - Use `require` to import modules.
-
-#### Built-in Node.js Modules
-1. **HTTP Module**: Used to create a web server.
-   - **Create Server**: `http.createServer((req, res) => { ... }).listen(3000);`
-   - **Handle Requests**: Check `req.url` and send responses using `res.write()` and `res.end()`.
-2. **File System Module**: Interact with the file system.
-   - **Read Directory**: `fs.readdir()` to list files in a directory.
-   - **Asynchronous Methods**: Prefer non-blocking methods to maintain performance.
-3. **Events Module**: Work with event-driven programming.
-   - **EventEmitter Class**: Create and handle custom events.
-
-#### Practical Examples
-1. **Creating a Simple Web Server**:
-   - Use the HTTP module to listen for requests on a specific port.
-   - Respond to different routes (e.g., `/`, `/api/courses`) with specific content.
-2. **Working with the File System**:
-   - Use `fs.readdir()` to read the contents of a directory and handle the results asynchronously.
-3. **Handling Events**:
-   - Use the `EventEmitter` class to create custom events and listeners.
-   - Raise events using `emit` and handle them with `on`.
-
-### Summary of Advanced Concepts
-1. **Error Handling**: Properly handle errors in asynchronous operations.
-2. **Asynchronous JavaScript**: Master callbacks, promises, and async/await for handling asynchronous operations.
-3. **Express Framework**: Use Express to structure and manage routes cleanly in a Node.js application.
-4. **Database Integration**: Implement CRUD operations and data validation using databases like MongoDB.
-5. **Security Practices**: Implement authentication and authorization using JSON Web Tokens (JWT).
-6. **Testing**: Perform unit and integration testing to ensure code reliability.
-7. **Deployment**: Deploy Node.js applications to the cloud for production use.
-
-By understanding these key concepts and practices, you'll be well-equipped to build efficient and scalable back-end services using Node.js.
-
-
-----------------------
+from django.http import HttpResponse
 from django.conf import settings
 from django.conf.urls.static import static
-
 from django.shortcuts import get_object_or_404
-
-def post_detail(request, id):
-    post = get_object_or_404(
-        Post,
-        id=id,
-        status=Post.Status.PUBLISHED
-    )
-    return render(
-        request,
-        'blog/post/detail.html',
-        {'post': post}
-    )
-
-
-{{ post.body|truncatewords:30|linebreaks }}
-
+from datetime import date
+from django.contrib.auth.models import User
+from blog.models import Post
+from .models import Post
+from django.db.models import Q
+from .forms import EmailPostForm
+from django.shortcuts import render, get_object_or_404
 from .models import Post
 
 
-@admin.register(Post)
+
+# Django forms
+class NewTaskForm(forms.Form):
+    task = forms.CharField(label="New Task")
+
+
+# view usages
+tasks = []
+def post_share(request, post_id):
+    # Retrieve post by id
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    
+    if request.method == 'POST':
+        # Form was submitted
+        form = EmailPostForm(request.POST)
+        if form.is_valid():
+            # Form fields passed validation
+            cd = form.cleaned_data
+	    tasks.append(cd["email"])	
+            # ... send email
+            return HttpResponseRedirect(reverse("tasks:index"))
+
+    else:
+        form = EmailPostForm()
+	return HttpResponse("<h1 style=\"color:blue\">Hello, world!</h1>")
+    
+    return render(request, 'blog/post/share.html', {'post': post, 'form': form})
+
+
+
+
+# admin
+ @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'author', 'publish', 'status']
+    list_display = ['title', 'slug', 'author', 'publish', 'status', 'price', 'available']  # Ensure 'price' and 'available' are in list_display
     list_filter = ['status', 'created', 'publish', 'author']
+    list_editable = ['price', 'available']  # Fields must be in list_display as well
     search_fields = ['title', 'body']
     prepopulated_fields = {'slug': ('title',)}
     raw_id_fields = ['author']
@@ -207,17 +61,16 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['status', 'publish']
     show_facets = admin.ShowFacets.ALWAYS
 
+
+# static files
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-
-from django.contrib.auth.models import User
-from blog.models import Post
-from django.db.models import Q
-
-# Retrieve the user with username 'admin'
+# About ORM
+# 0. Retrieve the user with username 'admin'
 user = User.objects.get(username='admin')
+post = Post.objects.get(id=1) # Retrieve the Post object with id 1
 
 # 1. Creating objects
 # Create a Post object with title 'A' and author 'user'
@@ -236,27 +89,24 @@ post.title = 'New title'
 post.save()  # Save the changes to the database
 
 # 3. Retrieving objects
-# Retrieve the first 5 Post objects
-Post.objects.all()[:5]
 
-# Retrieve a random Post object
-Post.objects.order_by('?')[0]
-
-# Retrieve all Post objects ordered by author (ascending) and title (descending)
-Post.objects.order_by('author', '-title')
+Post.objects.all()[:5] # Retrieve the first 5 Post objects
+Post.objects.order_by('?')[0] # Retrieve a random Post object
+Post.objects.order_by('author', '-title') # Retrieve all Post objects ordered by author (ascending) and title (descending)
 
 # 4. Deleting objects
-# Retrieve the Post object with id 1 and delete it
-post = Post.objects.get(id=1)
-post.delete()
+post.delete() # delete it
 
 # 5. Advanced Queries
 # Check if any Post objects exist that were published after January 1, 2024,
 # have an author with username 'admin', and do not have a title starting with 'Why'
+
+
 Post.objects.filter(publish__date__gt=date(2024, 1, 1)) \
     .filter(author__username='admin') \
     .exclude(title__startswith='Why') \
     .exists()
+
 
 # Create Q objects for titles starting with 'who' or 'why'
 starts_who = Q(title__istartswith='who')
@@ -265,3 +115,112 @@ starts_why = Q(title__istartswith='why')
 # Count the number of Post objects with titles starting with 'who' or 'why'
 Post.objects.filter(starts_who | starts_why).count()
 
+
+
+
+<form action="{% url "blog:post_comment" post.id %}" method="post">
+  from blog.models import Post
+  {% csrf_token %}
+  <p><input type="submit" value="Click!"></p>
+</form>
+
+
+
+# {{ post.body|truncatewords:30|linebreaks }}  
+# {{ post.tags.all|join:", " }}
+
+{% for tag in post.tags.all %}
+    <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+        {{ tag.name }}
+        {{ tag.date_added|date:'M d, Y H:i' }}
+    </a>{% if not forloop.last %}, {% endif %}
+{% empty %}
+    <p>There are no tags yet.</p>
+{% endfor %}
+
+
+ <form action="{% url 'tasks:add'
+ method="post" %}">
+ {% csrf token %}
+ {{ form.as_div }}
+ <button name="submit">Log in</button>
+ </form>
+
+
+
+
+
+
+name = models.CharField(max_length=200)
+slug = models.SlugField(max_length=200, unique=True)
+description = models.TextField(blank=True)
+category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+price = models.DecimalField(max_digits=10, decimal_places=2)
+available = models.BooleanField(default=True)
+created = models.DateTimeField(auto_now_add=True)
+updated = models.DateTimeField(auto_now=True)
+
+
+
+class Meta:
+    ordering = ['name']
+    indexes = [
+        models.Index(fields=['name']),
+    ]
+    verbose_name = 'category'
+    verbose_name_plural = 'categories'
+
+
+def get_absolute_url(self):
+    return reverse('shop:product_list_by_category', args=[self.slug])
+
+
+# request.session is like a dict
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </nav>
+        {% endblock %}
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        <p>&copy; 2024 My Website. All rights reserved.</p>
+        {% endblock %}
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
+
+
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
