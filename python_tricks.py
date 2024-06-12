@@ -54,7 +54,7 @@ def prefix_static(prefix):
         return result
     return modify    
 
-
+modify_image_references_from_clipboard(prefix_static("shop/")
 
 
 
