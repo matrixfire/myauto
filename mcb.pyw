@@ -1,21 +1,3 @@
-'''
-**Background:** I'm creating a multifunctional clipboard using python along with some libraries like `pyperclip`, `re` and so on for making customized clipboard copying and pasting features.
-
-**Goal:**  I want to extend the multifunctional clipboard functionality to include {{}} and make sure to update display_help.
-
-**Here's what I've done so far:**
-- You can check my below code
-
-**Below is some of my existing setup/code:**
-
-
-Please, explain the necessary changes to the code.
-
-
-
-'''
-
-
 import shelve
 import pyperclip
 import sys
@@ -50,7 +32,7 @@ def export_to_csv(filename):
 # Function to import data from a CSV file
 def import_from_csv(filename):
     filepath = os.path.join(data_dir, filename)
-    with open(filepath, newline='') as csvfile:
+    with open(filepath, newline='') as csvfile, shelve.open(shelve_filename) as my_shelf:
         reader = csv.DictReader(csvfile)
         for row in reader:
             my_shelf[row['key']] = row['value']
@@ -62,6 +44,8 @@ def display_help():
     -----------------------------
     -save <keyword> [-m "message"] : Save the current clipboard content under the specified keyword.
                                     Optionally, add a brief usage message.
+    -save+ <keyword>               : Append the current clipboard content to the specified keyword's content
+                                    with three empty lines in between.
     -delete <keyword>              : Delete the content associated with the specified keyword.
     -delete                        : Prompt for keyword if not specified.
     -list                          : List all saved key-value pairs and copy them to the clipboard.
@@ -94,6 +78,18 @@ if arg_len >= 2:
                 message = sys.argv[4]
                 value += f"\n***Bill Super Clipboard-{message}***"
             my_shelf[keyword] = value
+        else:
+            print("Keyword not specified.")
+    elif action == '-save+':
+        if arg_len >= 3:
+            keyword = sys.argv[2]
+            new_value = pyperclip.paste()
+            if keyword in my_shelf:
+                old_value = my_shelf[keyword]
+                combined_value = f"{old_value}\n\n\n{new_value}"
+            else:
+                combined_value = new_value
+            my_shelf[keyword] = combined_value
         else:
             print("Keyword not specified.")
     elif action == '-delete':
@@ -164,10 +160,3 @@ if arg_len >= 2:
 
 # Always close the shelve file
 my_shelf.close()
-
-
-
-
-
-
-
