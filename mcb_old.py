@@ -5,7 +5,6 @@ import csv
 import os
 import lorem
 import datetime
-import json
 
 # Determine the directory of the script
 script_dir = os.path.dirname(__file__)
@@ -19,17 +18,6 @@ shelve_filename = os.path.join(data_dir, 'mcb')
 
 # Open a shelve file to store the data
 my_shelf = shelve.open(shelve_filename)
-
-# Markdown template for key-value pairs
-MARKDOWN_TEMPLATE = """
-**<span style="color:red">Key:</span>**
-{key}<br>
-**<span style="color:green">Value:</span>**
-{value}
-
-
----
-"""
 
 # Function to export data to a CSV file
 def export_to_csv(filename):
@@ -65,7 +53,6 @@ def display_help():
     -export <filename.csv>         : Export all saved data to the specified CSV file (default: mydata.csv).
     -import <filename.csv>         : Import data from the specified CSV file (default: mydata.csv).
     -flush                         : Clear all data from the shelve database.
-    -json                          : Convert all key-value pairs to a formatted JSON string and copy to clipboard.
     <keyword>                      : Retrieve the content associated with the specified keyword and copy it to the clipboard.
     -lorem1                        : Copy a lorem ipsum sentence to the clipboard.
     -lorem2                        : Copy a lorem ipsum paragraph to the clipboard.
@@ -123,9 +110,9 @@ if arg_len >= 2:
             pyperclip.copy(formatted_keys)
             print(formatted_keys)
         else:
-            # List all key-value pairs using the Markdown template and copy to clipboard
+            # List all key-value pairs and copy to clipboard
             print("List all key-value pairs and copy to clipboard")
-            formatted_list = "\n".join(MARKDOWN_TEMPLATE.format(key=key, value=my_shelf[key]) for key in my_shelf.keys())
+            formatted_list = f"\n**********\n".join(f"{key}: {my_shelf[key]}" for key in my_shelf.keys())
             pyperclip.copy(formatted_list)
             print(formatted_list)
     elif action == '-export':
@@ -158,12 +145,6 @@ if arg_len >= 2:
         git_commands = f'git add .\ngit commit -m "{message}"\ngit push'
         pyperclip.copy(git_commands)
         print(git_commands)
-    elif action == '-json':
-        # Convert all key-value pairs to a formatted JSON string and copy to clipboard
-        data_dict = {key: my_shelf[key] for key in my_shelf.keys()}
-        json_string = json.dumps(data_dict, indent=4)
-        pyperclip.copy(json_string)
-        print("JSON string copied to clipboard")
     else:
         # Retrieve and paste a value from the shelve database by keyword
         if action in my_shelf:
