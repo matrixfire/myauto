@@ -46,6 +46,10 @@ def cells_2_list(txt=''):
     print(f'Found {len(result_list)} item(s).')
     return result_list
 
+
+
+
+
 def t(text):
     import re
     # Regex pattern for matching the year and month
