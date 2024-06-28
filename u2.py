@@ -1,8 +1,15 @@
 import keyboard
 import pyperclip
+import json
+import random
+from pathlib import Path
 
 # Global list to store clipboard contents
 clipboard_list = []
+
+template_str2 = "Hello {}! I'm from Reobrix, a top Chinese building block brand. Let's connect and explore potential collaborations together!"
+template_str1 = "Hello {}! I'm from Reobrix, a top Chinese building block brand. We are looking for MOC designers to cooperate, can we talk?"
+
 
 def save_clipboard():
     """Save the current clipboard content to the global list."""
@@ -24,14 +31,45 @@ def clear_list():
     clipboard_list.clear()
     print("List cleared")
 
-# Set hotkeys
-keyboard.add_hotkey('ctrl+space', save_clipboard)
-keyboard.add_hotkey('ctrl+f1', lambda: copy_list_to_clipboard(numbered=False))
-keyboard.add_hotkey('ctrl+f2', clear_list)
-keyboard.add_hotkey('ctrl+f3', lambda: copy_list_to_clipboard(numbered=True))
+def continuously_copy():
+    """Set up hotkeys and keep the script running."""
+    # Set hotkeys
+    keyboard.add_hotkey('ctrl+space', save_clipboard)
+    keyboard.add_hotkey('ctrl+f1', lambda: copy_list_to_clipboard(numbered=False))
+    keyboard.add_hotkey('ctrl+f2', clear_list)
+    keyboard.add_hotkey('ctrl+f3', lambda: copy_list_to_clipboard(numbered=True))
 
-print("Hotkeys set up: 'Ctrl+Space' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to clear list, 'Ctrl+F3' to copy numbered list to clipboard.")
-print("Press 'Esc' to exit.")
+    print("Hotkeys set up: 'Ctrl+Space' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to clear list, 'Ctrl+F3' to copy numbered list to clipboard.")
+    print("Press 'Esc' to exit.")
 
-# Keep the script running
-keyboard.wait('esc')
+    # Keep the script running
+    keyboard.wait('esc')
+
+
+def process_template():
+    """Process the clipboard content with the template and copy it back to the clipboard."""
+    content = pyperclip.paste().strip()
+    path = Path("words.json")
+    path_txt = path.read_text()
+    templates = json.loads(path_txt)["moc_greeting"]
+    print("List items: ",len(templates))
+    template_str = random.choice(templates)
+    templated_content = template_str.format(content)
+    pyperclip.copy(templated_content)
+    print(f"Template applied: {templated_content}")
+
+
+def templated_copy():
+    """Wait for 'ctrl+space' and embed clipboard content into a template string."""
+    keyboard.add_hotkey('ctrl+space', process_template)
+    print("Press 'ctrl+space' to process the template and 'esc' to exit.")
+    keyboard.wait('esc')
+    print("Exited.")
+
+
+# Call the function to start the process
+# continuously_copy()
+templated_copy()
+
+
+

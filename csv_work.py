@@ -18,33 +18,6 @@ def bitch():
     h = "higer vision" # 更高的视角和维度看问题
 
 
-def cells_2_list(txt=''):
-    '''still have bugs...'''
-    import pyperclip as p
-    # Check if the text contains double quotes
-    if not txt:
-        txt = p.paste()
-    txt = txt.strip()
-    if '"' in txt:
-        # Replace new lines within quotes with whitespace
-        cleaned_txt = ''
-        in_quote = False
-        for char in txt:
-            if char == '"':
-                in_quote = not in_quote
-            if in_quote and char == '\n':
-                cleaned_txt += ' '
-            else:
-                cleaned_txt += char
-        # Remove double quotes
-        # cleaned_txt = cleaned_txt.replace('"', '')
-    else:
-        cleaned_txt = txt.strip()  # Remove leading/trailing whitespace
-    # Split text into a list based on newline separator
-    result_list = cleaned_txt.split('\n')
-    result_list = [i.strip() for i in result_list]
-    print(f'Found {len(result_list)} item(s).')
-    return result_list
 
 
 

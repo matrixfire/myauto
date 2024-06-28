@@ -7,6 +7,8 @@ import webbrowser
 def open_links():
     links = [
         "https://chat.openai.com",
+        "https://chat.openai.com",
+        "https://chat.openai.com",
         "https://www.bing.com/chat",
         "https://yiyan.baidu.com/",
         "https://kimi.moonshot.cn/chat"
