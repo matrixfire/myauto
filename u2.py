@@ -68,8 +68,8 @@ def templated_copy():
 
 
 # Call the function to start the process
-# continuously_copy()
-templated_copy()
+continuously_copy()
+# templated_copy()
 
 
 
