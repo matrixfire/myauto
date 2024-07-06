@@ -34,16 +34,16 @@ def clear_list():
 def continuously_copy():
     """Set up hotkeys and keep the script running."""
     # Set hotkeys
-    keyboard.add_hotkey('ctrl+space', save_clipboard)
+    keyboard.add_hotkey('shift+c', save_clipboard)
     keyboard.add_hotkey('ctrl+f1', lambda: copy_list_to_clipboard(numbered=False))
-    keyboard.add_hotkey('ctrl+f2', clear_list)
-    keyboard.add_hotkey('ctrl+f3', lambda: copy_list_to_clipboard(numbered=True))
+    keyboard.add_hotkey('ctrl+f2', lambda: copy_list_to_clipboard(numbered=True))
+    keyboard.add_hotkey('ctrl+f3', clear_list)
 
-    print("Hotkeys set up: 'Ctrl+Space' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to clear list, 'Ctrl+F3' to copy numbered list to clipboard.")
-    print("Press 'Esc' to exit.")
+    print("Hotkeys set up: 'shift+c' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to copy numbered list to clipboard, 'Ctrl+F3' to clear list.")
+    print("Press 'Ctrl+Esc' to exit.")
 
     # Keep the script running
-    keyboard.wait('esc')
+    keyboard.wait('ctrl+esc')
 
 
 def process_template():
@@ -62,8 +62,8 @@ def process_template():
 def templated_copy():
     """Wait for 'ctrl+space' and embed clipboard content into a template string."""
     keyboard.add_hotkey('ctrl+space', process_template)
-    print("Press 'ctrl+space' to process the template and 'esc' to exit.")
-    keyboard.wait('esc')
+    print("Press 'ctrl+space' to process the template and 'ctrl+esc' to exit.")
+    keyboard.wait('ctrl+esc')
     print("Exited.")
 
 
