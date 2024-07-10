@@ -9,7 +9,8 @@ def ai2():
     links = [
         "https://www.bing.com/chat",
         "https://yiyan.baidu.com/",
-        "https://kimi.moonshot.cn/chat"
+        "https://kimi.moonshot.cn/chat",
+        "https://chatglm.cn/main/alltoolsdetail",
     ]
     for link in links:
         webbrowser.open(link)
