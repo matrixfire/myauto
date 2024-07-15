@@ -34,12 +34,12 @@ def clear_list():
 def continuously_copy():
     """Set up hotkeys and keep the script running."""
     # Set hotkeys
-    keyboard.add_hotkey('ctrl+c+x', save_clipboard)
+    keyboard.add_hotkey('alt+z', save_clipboard)
     keyboard.add_hotkey('ctrl+f1', lambda: copy_list_to_clipboard(numbered=False))
     keyboard.add_hotkey('ctrl+f2', lambda: copy_list_to_clipboard(numbered=True))
     keyboard.add_hotkey('ctrl+f3', clear_list)
 
-    print("Hotkeys set up: 'Ctrl+c+x' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to copy numbered list to clipboard, 'Ctrl+F3' to clear list.")
+    print("Hotkeys set up: 'alt+z' to save clipboard, 'Ctrl+F1' to copy list to clipboard, 'Ctrl+F2' to copy numbered list to clipboard, 'Ctrl+F3' to clear list.")
     print("Press 'Ctrl+Esc' to exit.")
 
     # Keep the script running
