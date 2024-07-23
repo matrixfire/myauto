@@ -108,3 +108,7 @@ onchange
 .value
 .value.length
 .innerHTML
+.style
+.style.color
+.style.display
+.dateset.color
