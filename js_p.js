@@ -21,6 +21,14 @@ setInterval(count, 1000);
 localStorage.getItem(key)
 localStorage.setItem(key, value)
  
+
+history.pushState({section: section}, "", `section${section}`);
+
+// When back arrow is clicked, show previous section
+window.onpopstate = function(event) {
+    console.log(event.state.section);
+    showSection(event.state.section);
+}
 // 2, some basics
 
 let counter = 0;
@@ -33,6 +41,10 @@ function count() {
     }
 }
 
+
+button.onclick = function() {
+    showPage(this.dataset.page);
+}
 
 
 document.querySelector('form').onsubmit = function() {
@@ -91,6 +103,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function showSection(section) {
+                
+    // Find section text from server
+    fetch(`/sections/${section}`)
+    .then(response => response.text())
+    .then(text => {
+        // Log text and display on page
+        console.log(text);
+        document.querySelector('#content').innerHTML = text;
+    });
+}
+
+
+
 
 // 3, events
 
@@ -108,3 +134,21 @@ onchange
 .value
 .value.length
 .innerHTML
+.style.color
+.style.display
+.dataset.color
+
+
+// 5,
+
+// Use regular functions when you need this to be dynamically bound based on how the function is called.
+// Use arrow functions when you want this to be lexically bound (i.e., inherit from the surrounding scope).
+
+
+texts = ["Text 1", "Text 2", "Text 3"]
+
+def section(request, num):
+    if 1 <= num <= 3:
+        return HttpResponse(texts[num - 1])
+    else:
+        raise Http404("No such section")
