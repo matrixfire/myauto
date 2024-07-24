@@ -146,6 +146,7 @@ onscroll
 .style.color
 .style.display
 .style.background
+.style.animationPlayState
 .dataset.color
 
 
