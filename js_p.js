@@ -137,6 +137,8 @@ onblur
 onchange 
 onscroll
 
+animationend
+
 // 4, properties and methods
 
 .value
@@ -148,6 +150,9 @@ onscroll
 .style.background
 .style.animationPlayState
 .dataset.color
+.state.
+.target
+.parentElement
 
 
 // 5,
